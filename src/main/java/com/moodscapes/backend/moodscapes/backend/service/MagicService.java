@@ -2,6 +2,7 @@ package com.moodscapes.backend.moodscapes.backend.service;
 
 import com.moodscapes.backend.moodscapes.backend.dao.AuthRepo;
 import com.moodscapes.backend.moodscapes.backend.entity.Auth;
+import com.moodscapes.backend.moodscapes.backend.service.interfaces.IEmailService;
 import com.moodscapes.backend.moodscapes.backend.service.interfaces.IMagicService;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +25,7 @@ public class MagicService implements IMagicService {
 
     private final UserDetailsService users;
     private final AuthRepo auth;
+    private final IEmailService emailService;
     private static final SecureRandom random = new SecureRandom();
     private static final List<Character> alphabet =
             IntStream.concat(
@@ -65,11 +67,12 @@ public class MagicService implements IMagicService {
                         .createdAt(LocalDateTime.now())
                         .build()
         );
-        mail(magic);
+        emailService.sendMagicTokenMail(magic);
+
     }
 
-    private void mail(@NotNull Auth token) {
-        log.info("{} has link http://localhost:8090/api/v1/auth/{}", token.getEmail(), token.getToken());
-    }
+//    private void mail(@NotNull Auth token) {
+//        log.info("{} has link http://localhost:8090/api/v1/auth/{}", token.getEmail(), token.getToken());
+//    }
 
 }
