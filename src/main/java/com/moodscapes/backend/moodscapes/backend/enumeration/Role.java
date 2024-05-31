@@ -1,17 +1,17 @@
-package com.moodscapes.backend.moodscapes.backend.entity;
+package com.moodscapes.backend.moodscapes.backend.enumeration;
 
-import static com.moodscapes.backend.moodscapes.backend.constant.SecurityConstants.PLANNER_AUTHORITIES;
+import static com.moodscapes.backend.moodscapes.backend.constant.SecurityConstants.*;
 
 public enum Role {
     SUPAADMIN(
             "ROLE_SUPAADMIN",
             "This role as all access privilege",
-            "user:read", "user:write", "user:delete", "event:create", "event:update", "event:delete"
+            SUPAADMIN_AUTHORITIES
     ),
     ADMIN(
             "ROLE_ADMIN",
             "This role as all access read and write privilege",
-            "user:read", "user:write", "event:create", "event:update"
+            ADMIN_AUTHORITIES
     ),
     PLANNER("ROLE_PLANNER",
             "This role as all planner access privilege",
@@ -19,18 +19,18 @@ public enum Role {
     ),
     VENDOR("ROLE_VENDOR",
             "This role as all vendor access privilege",
-            "vendor:read", "vendor:write"
+            VENDOR_AUTHORITIES
     ),
     CENTER("ROLE_CENTER",
             "This role as all center access privilege",
-            "center:read", "center:write"
+            CENTER_AUTHORITIES
     );
 
     private final String roleName;
     private final String description;
-    private final String[] authorities;
+    private final String authorities;
 
-    Role(String roleName, String description, String... authorities) {
+    Role(String roleName, String description, String authorities) {
         this.roleName = roleName;
         this.description = description;
         this.authorities = authorities;
@@ -43,7 +43,7 @@ public enum Role {
         return description;
     }
 
-    public String[] getAuthorities() {
+    public String getAuthorities() {
         return authorities;
     }
 }

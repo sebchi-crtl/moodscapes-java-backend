@@ -20,15 +20,15 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_DEFAULT;
 @JsonInclude(NON_DEFAULT)
 public class CredentialEntity extends Auditable {
     private String password;
-    @OneToOne(targetEntity = Auth.class, fetch = FetchType.EAGER)
+    @OneToOne(targetEntity = User.class, fetch = FetchType.EAGER)
     @JoinColumn(name = "auth_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
     @JsonProperty("auth_id")
-    private Auth userAuth;
+    private User userAuth;
 
-    public CredentialEntity(Auth userAuth, String password) {
+    public CredentialEntity(User userAuth, String password) {
         this.userAuth = userAuth;
         this.password = password;
     }

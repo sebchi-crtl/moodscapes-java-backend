@@ -1,6 +1,7 @@
 package com.moodscapes.backend.moodscapes.backend.entity;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.moodscapes.backend.moodscapes.backend.enumeration.Role;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
@@ -11,7 +12,6 @@ import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Set;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_DEFAULT;
