@@ -1,4 +1,4 @@
-package com.moodscapes.backend.moodscapes.backend.service;
+package com.moodscapes.backend.moodscapes.backend.service.interfaces;
 
 public interface IAuthService {
 

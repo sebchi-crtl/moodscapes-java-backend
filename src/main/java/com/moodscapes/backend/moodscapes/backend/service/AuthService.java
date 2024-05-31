@@ -1,4 +1,6 @@
 package com.moodscapes.backend.moodscapes.backend.service;
 
-public class AuthService implements IUserService{
+import com.moodscapes.backend.moodscapes.backend.service.interfaces.IUserService;
+
+public class AuthService implements IUserService {
 }

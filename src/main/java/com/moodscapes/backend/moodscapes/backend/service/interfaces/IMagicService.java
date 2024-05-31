@@ -1,4 +1,4 @@
-package com.moodscapes.backend.moodscapes.backend.service;
+package com.moodscapes.backend.moodscapes.backend.service.interfaces;
 
 import com.moodscapes.backend.moodscapes.backend.dao.AuthRepo;
 import com.moodscapes.backend.moodscapes.backend.entity.Auth;

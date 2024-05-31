@@ -1,6 +1,6 @@
 package com.moodscapes.backend.moodscapes.backend.controller;
 
-import com.moodscapes.backend.moodscapes.backend.service.IEventService;
+import com.moodscapes.backend.moodscapes.backend.service.interfaces.IEventService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;

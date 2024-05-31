@@ -2,6 +2,7 @@ package com.moodscapes.backend.moodscapes.backend.service;
 
 import com.moodscapes.backend.moodscapes.backend.dao.AuthRepo;
 import com.moodscapes.backend.moodscapes.backend.entity.Auth;
+import com.moodscapes.backend.moodscapes.backend.service.interfaces.IMagicService;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +20,7 @@ import static com.moodscapes.backend.moodscapes.backend.enumeration.SignInMethod
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class MagicService implements IMagicService{
+public class MagicService implements IMagicService {
 
     private final UserDetailsService users;
     private final AuthRepo auth;

@@ -1,4 +1,4 @@
-package com.moodscapes.backend.moodscapes.backend.service;
+package com.moodscapes.backend.moodscapes.backend.service.interfaces;
 
 import com.moodscapes.backend.moodscapes.backend.entity.Auth;
 import jakarta.validation.constraints.NotNull;
