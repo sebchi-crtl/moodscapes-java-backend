@@ -19,7 +19,7 @@ import static com.moodscapes.backend.moodscapes.backend.enumeration.SignInMethod
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class MagicService {
+public class MagicService implements IMagicService{
 
     private final UserDetailsService users;
     private final AuthRepo auth;
@@ -44,10 +44,13 @@ public class MagicService {
                 .map(String::valueOf)
                 .collect(Collectors.joining());
     }
+
+    @Override
     public String token() {
         return token(64);
     }
 
+    @Override
     public void issueToken(String username){
 //        Todo: import this to auth service with exceptions and try catch
         var user = users.loadUserByUsername(username);
