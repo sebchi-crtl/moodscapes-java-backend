@@ -21,6 +21,7 @@ target/
 .idea/
 .idea/workspace.xml
 .idea
+moodscapes-backend.iml
 
 ### NetBeans ###
 /nbproject/private/
