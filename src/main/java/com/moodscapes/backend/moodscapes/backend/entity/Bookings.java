@@ -1,7 +1,8 @@
-package com.moodscapes.backend.moodscapes.backend.enumeration;
+package com.moodscapes.backend.moodscapes.backend.entity;
 
 import com.moodscapes.backend.moodscapes.backend.entity.BookingDetail;
 import com.moodscapes.backend.moodscapes.backend.entity.User;
+import com.moodscapes.backend.moodscapes.backend.enumeration.BookingStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;

@@ -22,10 +22,10 @@ import static java.time.LocalDateTime.*;
 @JsonIgnoreProperties(value = {"createdAt", "updatedAt"}, allowGetters = true)
 public abstract class Auditable {
     @Id
-    @SequenceGenerator(name = "primary_key_seq", sequenceName = "primary_key_seq", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "primary_key_seq")
+    @GeneratedValue(generator = "audit-id")
+    @GenericGenerator(name = "audit-id", strategy = "com.moodscapes.backend.moodscapes.backend.util.CustomIdGenerator")
     @Column(name = "id", updatable = false)
-    private Long id;
+    private String id;
     private String referenceId = new AlternativeJdkIdGenerator().generateId().toString();
     @NotNull
     private Long createdBy;

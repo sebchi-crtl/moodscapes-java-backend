@@ -1,4 +1,4 @@
-package com.moodscapes.backend.moodscapes.backend.utill;
+package com.moodscapes.backend.moodscapes.backend.util;
 
 import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import org.hibernate.id.IdentifierGenerator;

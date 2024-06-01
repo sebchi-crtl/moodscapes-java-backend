@@ -13,6 +13,6 @@ import java.time.LocalDateTime;
 public interface AuthRepo extends JpaRepository<Auth, String> {
     @Modifying
     @Transactional
-    @Query("DELETE FROM auth a WHERE a.createdAt < :threshold")
+    @Query("DELETE FROM Auth a WHERE a.createdAt < :threshold")
     void deleteExpired(LocalDateTime threshold);
 }

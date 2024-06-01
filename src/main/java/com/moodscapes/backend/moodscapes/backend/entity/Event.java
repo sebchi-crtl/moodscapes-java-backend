@@ -20,7 +20,7 @@ public class Event {
 
     @Id
     @GeneratedValue(generator = "event-id")
-    @GenericGenerator(name = "event-id", strategy = "com.moodscapes.backend.moodscapes.backend.utill.CustomIdGenerator")
+    @GenericGenerator(name = "event-id", strategy = "com.moodscapes.backend.moodscapes.backend.util.CustomIdGenerator")
     private String eventId;
     private String userId;
     private String title;

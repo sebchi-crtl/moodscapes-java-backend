@@ -1,15 +1,15 @@
 package com.moodscapes.backend.moodscapes.backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.moodscapes.backend.moodscapes.backend.enumeration.SignInMethod;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
 import java.time.LocalDateTime;
+
+import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_DEFAULT;
 
 @Entity
 @Data
@@ -17,11 +17,14 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "auth")
+@EqualsAndHashCode(callSuper = false)
+@JsonInclude(NON_DEFAULT)
 public class Auth extends Auditable{
     @Id
     @GeneratedValue(generator = "auth-id")
-    @GenericGenerator(name = "auth-id", strategy = "com.moodscapes.backend.moodscapes.backend.utill.CustomIdGenerator")
-    private String authId;
+    @GenericGenerator(name = "auth-id", strategy = "com.moodscapes.backend.moodscapes.backend.util.CustomIdGenerator")
+    @Column(name = "auth_id", updatable = false)
+    private String id;
     @Email(message = "invalid email. Please provide a valid email")
     @Column(nullable = false, unique = true)
     private String email;

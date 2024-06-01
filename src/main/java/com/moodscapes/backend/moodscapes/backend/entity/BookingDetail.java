@@ -1,6 +1,5 @@
 package com.moodscapes.backend.moodscapes.backend.entity;
 
-import com.moodscapes.backend.moodscapes.backend.enumeration.Bookings;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

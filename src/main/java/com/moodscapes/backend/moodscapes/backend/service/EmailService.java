@@ -10,8 +10,8 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import static com.moodscapes.backend.moodscapes.backend.utill.EmailUtils.getNewAccountEmailMessage;
-import static com.moodscapes.backend.moodscapes.backend.utill.EmailUtils.getTokenEmailMessage;
+import static com.moodscapes.backend.moodscapes.backend.util.EmailUtils.getNewAccountEmailMessage;
+import static com.moodscapes.backend.moodscapes.backend.util.EmailUtils.getTokenEmailMessage;
 
 @Service
 @RequiredArgsConstructor

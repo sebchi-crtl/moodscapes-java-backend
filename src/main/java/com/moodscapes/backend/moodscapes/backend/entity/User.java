@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.annotation.CreatedDate;
@@ -22,11 +23,12 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_DEFAULT;
 @Table(name = "users")
 @Entity
 @JsonInclude(NON_DEFAULT)
+@EqualsAndHashCode(callSuper = false)
 public class User extends Auditable{
 
     @Id
     @GeneratedValue(generator = "user-id")
-    @GenericGenerator(name = "user-id", strategy = "com.moodscapes.backend.moodscapes.backend.utill.CustomIdGenerator")
+    @GenericGenerator(name = "user-id", strategy = "com.moodscapes.backend.moodscapes.backend.util.CustomIdGenerator")
     @Column(name = "id", updatable = false, unique = true, nullable = false)
     private String id;
     @Email(message = "invalid email. Please provide a valid email")

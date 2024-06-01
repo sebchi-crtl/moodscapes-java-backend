@@ -1,6 +1,6 @@
 package com.moodscapes.backend.moodscapes.backend.dao;
 
-import com.moodscapes.backend.moodscapes.backend.enumeration.Bookings;
+import com.moodscapes.backend.moodscapes.backend.entity.Bookings;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

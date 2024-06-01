@@ -1,30 +1,32 @@
 package com.moodscapes.backend.moodscapes.backend.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
 import java.time.LocalDateTime;
 import java.util.Vector;
 
+import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_DEFAULT;
+
+
 @Entity
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-public class Quotes {
+@Table(name = "quotes")
+@EqualsAndHashCode(callSuper = false)
+@JsonInclude(NON_DEFAULT)
+public class Quotes{
 
     @Id
-    @GeneratedValue(generator = "custom-id")
-    @GenericGenerator(name = "custom-id", strategy = "com.moodscapes.backend.moodscapes.backend.utill.CustomIdGenerator")
-    private Long quoteId;
+    @GeneratedValue(generator = "quote-id")
+    @GenericGenerator(name = "quote-id", strategy = "com.moodscapes.backend.moodscapes.backend.util.CustomIdGenerator")
+    @Column(name = "quote_id", updatable = false, nullable = false)
+    private String id;
     private String userID;
     private String eventID;
     private String senderUserID;
@@ -32,3 +34,6 @@ public class Quotes {
 //    private Vector<CollectionsID> items;
     private LocalDateTime createdAt;
 }
+
+
+

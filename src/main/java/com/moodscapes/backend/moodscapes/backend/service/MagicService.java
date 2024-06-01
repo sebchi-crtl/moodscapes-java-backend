@@ -56,12 +56,12 @@ public class MagicService implements IMagicService {
     @Override
     public void issueToken(String username){
 //        Todo: import this to auth service with exceptions and try catch
-        var user = users.loadUserByUsername(username);
+//        var user = users.loadUserByUsername(username);
         var token = token();
         Auth magic = auth.save(
                 Auth
                         .builder()
-                        .email(user.getUsername())
+                        .email(username)
                         .token(token)
                         .methodProvider(MagicLink)
                         .createdAt(LocalDateTime.now())
