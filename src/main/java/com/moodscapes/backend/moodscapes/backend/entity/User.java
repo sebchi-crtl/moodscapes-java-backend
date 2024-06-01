@@ -44,12 +44,5 @@ public class User extends Auditable{
     @Enumerated(EnumType.STRING)
     private Set<Role> role;
     private String address;
-    @NotNull
-    @CreatedDate
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private LocalDateTime createdAt;
-    @CreatedDate
-    @Column(name = "updated_at", nullable = false)
-    private LocalDateTime updatedAt;
 
 }

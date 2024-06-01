@@ -17,10 +17,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Guest {
+public class Guest extends Auditable{
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long guestId;
     private String userID;
     private String eventID;

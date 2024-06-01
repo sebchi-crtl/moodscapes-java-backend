@@ -20,19 +20,14 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_DEFAULT;
 @Table(name = "quotes")
 @EqualsAndHashCode(callSuper = false)
 @JsonInclude(NON_DEFAULT)
-public class Quotes{
+public class Quotes extends Auditable{
 
-    @Id
-    @GeneratedValue(generator = "quote-id")
-    @GenericGenerator(name = "quote-id", strategy = "com.moodscapes.backend.moodscapes.backend.util.CustomIdGenerator")
-    @Column(name = "quote_id", updatable = false, nullable = false)
-    private String id;
+    private String quoteId;
     private String userID;
     private String eventID;
     private String senderUserID;
     private String quoteResponse;
 //    private Vector<CollectionsID> items;
-    private LocalDateTime createdAt;
 }
 
 

@@ -1,10 +1,7 @@
 package com.moodscapes.backend.moodscapes.backend.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
 import java.time.LocalDateTime;
@@ -15,12 +12,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Event {
-
-
-    @Id
-    @GeneratedValue(generator = "event-id")
-    @GenericGenerator(name = "event-id", strategy = "com.moodscapes.backend.moodscapes.backend.util.CustomIdGenerator")
+@EqualsAndHashCode(callSuper = false)
+public class Event extends Auditable {
     private String eventId;
     private String userId;
     private String title;
@@ -33,6 +26,4 @@ public class Event {
     private int guest;
     private boolean available;
     private String note;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
 }

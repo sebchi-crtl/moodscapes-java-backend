@@ -20,17 +20,18 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Bookings {
+public class Bookings extends Auditable {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long bookingId;
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     @NotNull
-    private User userId;
-//    @ManyToMany
-//    @JoinColumn(name = "recipient_id")
-//    private User recipient;
+    private User senderId;
+    @ManyToOne
+    @JoinColumn(name = "recipient_id", referencedColumnName = "id")
+    private User recipientId;
+    @ElementCollection(fetch = FetchType.EAGER)
+    @Enumerated(EnumType.STRING)
     private Set<BookingStatus> confirm;
     @OneToMany(mappedBy = "booking", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<BookingDetail> details;

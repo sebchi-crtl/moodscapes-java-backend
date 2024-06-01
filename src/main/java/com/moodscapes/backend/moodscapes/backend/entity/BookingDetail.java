@@ -11,22 +11,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class BookingDetail {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class BookingDetail extends Auditable{
     private Long bookingDetailId;
-
     @ManyToOne
-    @JoinColumn(name = "booking_id")
     private Bookings booking;
-
-//    @ManyToOne
-//    @JoinColumn(name = "item_id", nullable = true)
-//    private Item item;
-
-//    @ManyToOne
-//    @JoinColumn(name = "venue_id", nullable = true)
-//    private Venue venue;
-
+    private String item;
+    private String  venue;
     private int quantity; // For items, e.g., number of chairs
 
 }

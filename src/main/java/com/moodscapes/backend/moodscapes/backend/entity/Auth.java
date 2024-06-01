@@ -19,7 +19,7 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_DEFAULT;
 @Table(name = "auth")
 @EqualsAndHashCode(callSuper = false)
 @JsonInclude(NON_DEFAULT)
-public class Auth extends Auditable{
+public class Auth{
     @Id
     @GeneratedValue(generator = "auth-id")
     @GenericGenerator(name = "auth-id", strategy = "com.moodscapes.backend.moodscapes.backend.util.CustomIdGenerator")
