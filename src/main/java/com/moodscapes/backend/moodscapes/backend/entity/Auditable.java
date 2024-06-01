@@ -45,8 +45,8 @@ public abstract class Auditable {
         if (userId == null)
             throw new ApiException("Cannot persist entity without user ID in Request Context for the thread");
         setCreatedAt(now());
-        setCreatedBy(Long.valueOf(userId));
-        setUpdatedBy(Long.valueOf(userId));
+        setCreatedBy(userId);
+        setUpdatedBy(userId);
         setUpdatedAt(now());
     }
 
@@ -56,6 +56,6 @@ public abstract class Auditable {
         if (userId == null)
             throw new ApiException("Cannot update entity without user ID in Request Context for the thread");
         setUpdatedAt(now());
-        setUpdatedBy(Long.valueOf(userId));
+        setUpdatedBy(userId);
     }
 }

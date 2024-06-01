@@ -24,12 +24,11 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_DEFAULT;
 @JsonInclude(NON_DEFAULT)
 public class User extends Auditable{
 
-
     @Id
-    @SequenceGenerator(name = "primary_key_seq", sequenceName = "primary_key_seq", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "primary_key_seq")
+    @GeneratedValue(generator = "user-id")
+    @GenericGenerator(name = "user-id", strategy = "com.moodscapes.backend.moodscapes.backend.utill.CustomIdGenerator")
     @Column(name = "id", updatable = false, unique = true, nullable = false)
-    private Long id;
+    private String id;
     @Email(message = "invalid email. Please provide a valid email")
     @Column(nullable = false, unique = true)
     private String email;
