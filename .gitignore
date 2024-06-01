@@ -1,11 +1,12 @@
-HELP.md
+# Target directory
 target/
-!moodscapes-java-backend/.mvn/wrapper/maven-wrapper.jar
-!.mvn/wrapper/maven-wrapper.jar
-!**/src/main/**/target/
-!**/src/test/**/target/
 
-### STS ###
+# Maven specific
+!.mvn/wrapper/maven-wrapper.jar
+**/src/main/**/target/
+**/src/test/**/target/
+
+# STS (Spring Tool Suite)
 .apt_generated
 .classpath
 .factorypath
@@ -14,25 +15,31 @@ target/
 .springBeans
 .sts4-cache
 
-### IntelliJ IDEA ###
+# IntelliJ IDEA
 *.iws
 *.iml
 *.ipr
 .idea/
-.idea/workspace.xml
-.idea
-moodscapes-backend.iml
-target
+.idea/*
 
-### NetBeans ###
+# NetBeans
 /nbproject/private/
 /nbbuild/
 /dist/
 /nbdist/
 /.nb-gradle/
 build/
-!**/src/main/**/build/
-!**/src/test/**/build/
+**/src/main/**/build/
+**/src/test/**/build/
 
-### VS Code ###
+# VS Code
 .vscode/
+
+# General files
+.DS_Store
+*.log
+*.bak
+*.swp
+
+# Help files
+HELP.md
