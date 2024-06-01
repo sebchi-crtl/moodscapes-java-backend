@@ -4,7 +4,7 @@ server:
     include-message: always
     path: /user/error
     whitelabel:
-      enable: false
+      enabled: false
   servlet:
     context-path: /api/v1
 management:
@@ -49,7 +49,7 @@ spring:
     allow-circular-references: true
   servlet:
     multipart:
-      enable: true
+      enabled: true
       max-file-size: 1000MB
       max-request-size: 1000MB
   mail:
