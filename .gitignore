@@ -1,12 +1,9 @@
-# Target directory
-target/
+# Maven
+/target/
+**/target/
+!/.mvn/wrapper/maven-wrapper.jar
 
-# Maven specific
-!.mvn/wrapper/maven-wrapper.jar
-**/src/main/**/target/
-**/src/test/**/target/
-
-# STS (Spring Tool Suite)
+# Spring Tool Suite
 .apt_generated
 .classpath
 .factorypath
@@ -20,7 +17,7 @@ target/
 *.iml
 *.ipr
 .idea/
-.idea/*
+.idea/**
 
 # NetBeans
 /nbproject/private/
@@ -28,9 +25,8 @@ target/
 /dist/
 /nbdist/
 /.nb-gradle/
-build/
-**/src/main/**/build/
-**/src/test/**/build/
+/build/
+**/build/
 
 # VS Code
 .vscode/
