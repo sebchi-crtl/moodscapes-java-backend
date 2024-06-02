@@ -18,7 +18,6 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_DEFAULT;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "quotes")
-@EqualsAndHashCode(callSuper = false)
 @JsonInclude(NON_DEFAULT)
 public class Quotes extends Auditable{
 

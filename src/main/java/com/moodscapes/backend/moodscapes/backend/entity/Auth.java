@@ -17,7 +17,6 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_DEFAULT;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "auth")
-@EqualsAndHashCode(callSuper = false)
 @JsonInclude(NON_DEFAULT)
 public class Auth{
     @Id

@@ -23,7 +23,6 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_DEFAULT;
 @Table(name = "users")
 @Entity
 @JsonInclude(NON_DEFAULT)
-@EqualsAndHashCode(callSuper = false)
 public class User extends Auditable{
 
     @Id
