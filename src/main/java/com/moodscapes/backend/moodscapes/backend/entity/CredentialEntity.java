@@ -15,7 +15,7 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_DEFAULT;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "users")
+@Table(name = "credentials")
 @Entity
 @JsonInclude(NON_DEFAULT)
 public class CredentialEntity extends Auditable {
