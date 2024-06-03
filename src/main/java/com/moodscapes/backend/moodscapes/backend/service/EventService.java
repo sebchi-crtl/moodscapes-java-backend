@@ -1,6 +1,6 @@
 package com.moodscapes.backend.moodscapes.backend.service;
 
-import com.moodscapes.backend.moodscapes.backend.dao.EventRepo;
+import com.moodscapes.backend.moodscapes.backend.repository.EventRepo;
 import com.moodscapes.backend.moodscapes.backend.dto.request.EventRequestDTO;
 import com.moodscapes.backend.moodscapes.backend.dto.response.EventResponseDTO;
 import com.moodscapes.backend.moodscapes.backend.mapper.EventMapper;

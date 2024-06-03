@@ -1,10 +1,9 @@
 package com.moodscapes.backend.moodscapes.backend.service;
 
-import com.moodscapes.backend.moodscapes.backend.dao.AuthRepo;
+import com.moodscapes.backend.moodscapes.backend.repository.AuthRepo;
 import com.moodscapes.backend.moodscapes.backend.entity.Auth;
 import com.moodscapes.backend.moodscapes.backend.service.interfaces.IEmailService;
 import com.moodscapes.backend.moodscapes.backend.service.interfaces.IMagicService;
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -21,9 +20,8 @@ import static com.moodscapes.backend.moodscapes.backend.enumeration.SignInMethod
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class MagicService implements IMagicService {
+public class MagicService extends AuthService implements IMagicService{
 
-    private final UserDetailsService users;
     private final AuthRepo auth;
     private final IEmailService emailService;
     private static final SecureRandom random = new SecureRandom();
@@ -56,7 +54,6 @@ public class MagicService implements IMagicService {
     @Override
     public void issueToken(String username){
 //        Todo: import this to auth service with exceptions and try catch
-//        var user = users.loadUserByUsername(username);
         var token = token();
         Auth magic = auth.save(
                 Auth
@@ -70,9 +67,5 @@ public class MagicService implements IMagicService {
         emailService.sendMagicTokenMail(magic);
 
     }
-
-//    private void mail(@NotNull Auth token) {
-//        log.info("{} has link http://localhost:8090/api/v1/auth/{}", token.getEmail(), token.getToken());
-//    }
 
 }

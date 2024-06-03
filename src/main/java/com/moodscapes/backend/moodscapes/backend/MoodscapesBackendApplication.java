@@ -9,8 +9,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
 @EnableAsync
-@EnableJpaRepositories("com.moodscapes.backend.moodscapes.backend.dao")
-@EntityScan("com.moodscapes.backend.moodscapes.backend.entity")
 @EnableScheduling
 public class MoodscapesBackendApplication {
 

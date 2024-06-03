@@ -1,6 +1,6 @@
 package com.moodscapes.backend.moodscapes.backend.util;
 
-import com.moodscapes.backend.moodscapes.backend.dao.AuthRepo;
+import com.moodscapes.backend.moodscapes.backend.repository.AuthRepo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
