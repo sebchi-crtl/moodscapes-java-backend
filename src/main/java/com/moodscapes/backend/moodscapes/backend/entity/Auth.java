@@ -30,7 +30,6 @@ public class Auth{
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private SignInMethod methodProvider;
-    private Integer loginAttempts;
     private LocalDateTime lastLogin;
     private boolean isNotLocked;
     @Transient

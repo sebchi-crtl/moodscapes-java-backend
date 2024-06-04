@@ -1,18 +1,16 @@
 package com.moodscapes.backend.moodscapes.backend.controller;
 
-import com.moodscapes.backend.moodscapes.backend.service.interfaces.IMagicService;
+import com.moodscapes.backend.moodscapes.backend.dto.request.AuthRequestDTO;
+import com.moodscapes.backend.moodscapes.backend.dto.response.HttpResponse;
+import com.moodscapes.backend.moodscapes.backend.service.interfaces.IAuthService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.Map;
-
-import static com.moodscapes.backend.moodscapes.backend.constant.SecurityConstants.ROLE_PLANNER;
 
 @RestController
 @Slf4j
@@ -20,7 +18,7 @@ import static com.moodscapes.backend.moodscapes.backend.constant.SecurityConstan
 @RequiredArgsConstructor
 public class AuthController {
 
-    private final IMagicService magicService;
+    private final IAuthService authService;
 
     @GetMapping
     public ResponseEntity<Map<String, String>> test(){
@@ -33,13 +31,42 @@ public class AuthController {
     }
 
     @PostMapping()
-    public ResponseEntity<?> code(){
-        magicService.issueToken("chiemelienwobodo8@gmail.com");
+    public ResponseEntity<?> signInWithMagicLink(@RequestBody AuthRequestDTO request ){
+        log.info(request.email());
+        authService.signInWithMagicLink(request.email());
         return ResponseEntity
                 .ok()
-                .body(Map.of(
-                        "Testing", "up and running",
-                        "Name", "chiemelie"
+                .body( new HttpResponse(
+                        LocalDateTime.now(),
+                        HttpStatus.OK.value(),
+                        HttpStatus.OK,
+                        "create Token",
+                        "token crated successfully",
+                        "Chiemelie wrote this",
+                        Map.of(
+                                "email", request.email()
+                        )
+
+                ));
+    }
+
+    @PostMapping()
+    public ResponseEntity<?> signInWithGoogleOAuth(@RequestBody AuthRequestDTO request ){
+        log.info(request.email());
+        authService.signInWithGoogleOAuth(request.email());
+        return ResponseEntity
+                .ok()
+                .body( new HttpResponse(
+                        LocalDateTime.now(),
+                        HttpStatus.OK.value(),
+                        HttpStatus.OK,
+                        "create Token",
+                        "token crated successfully",
+                        "Chiemelie wrote this",
+                        Map.of(
+                                "email", request.email()
+                        )
+
                 ));
     }
 }

@@ -85,6 +85,9 @@ cors:
   exposed-headers: "*"
 
 app:
+  auth:
+    magiclink:
+      base-url: http://localhost:8090
   jwt:
     my-key: ${API_KEY}
     expiration-in-ms: ${EXPIRATION_IN_MS}

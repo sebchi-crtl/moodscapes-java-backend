@@ -4,7 +4,7 @@ public interface IMagicService {
 
     public String token();
 
-    public void issueToken(String username);
+    public String issueToken(String username);
 
 
 }
