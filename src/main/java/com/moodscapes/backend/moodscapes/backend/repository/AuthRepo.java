@@ -15,4 +15,5 @@ public interface AuthRepo extends JpaRepository<Auth, String> {
     @Transactional
     @Query("DELETE FROM Auth a WHERE a.createdAt < :threshold")
     void deleteExpired(LocalDateTime threshold);
+    Auth findByToken(String token);
 }

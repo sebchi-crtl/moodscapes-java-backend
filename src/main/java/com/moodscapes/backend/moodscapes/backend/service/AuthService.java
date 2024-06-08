@@ -2,6 +2,9 @@ package com.moodscapes.backend.moodscapes.backend.service;
 
 import com.moodscapes.backend.moodscapes.backend.entity.Auth;
 import com.moodscapes.backend.moodscapes.backend.service.interfaces.IAuthService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.transaction.Transactional;
 
 import java.security.SecureRandom;
 import java.util.List;
@@ -61,4 +64,7 @@ public abstract class AuthService implements IAuthService {
 
         }
     }
+
+    @Transactional
+    protected abstract void authenticate(String token, HttpServletRequest request, HttpServletResponse response);
 }

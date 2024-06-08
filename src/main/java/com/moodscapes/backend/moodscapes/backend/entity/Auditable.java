@@ -1,12 +1,9 @@
 package com.moodscapes.backend.moodscapes.backend.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.moodscapes.backend.moodscapes.backend.domain.RequestContext;
-import com.moodscapes.backend.moodscapes.backend.exception.ApiException;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
-import lombok.Getter;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -14,7 +11,7 @@ import org.springframework.util.AlternativeJdkIdGenerator;
 
 import java.time.LocalDateTime;
 
-import static java.time.LocalDateTime.*;
+import static java.time.LocalDateTime.now;
 
 @Data
 @MappedSuperclass
@@ -28,9 +25,9 @@ public abstract class Auditable {
     private String id;
     private String referenceId = new AlternativeJdkIdGenerator().generateId().toString();
     @NotNull
-    private Long createdBy;
+    private String createdBy;
     @NotNull
-    private Long updatedBy;
+    private String updatedBy;
     @NotNull
     @CreatedDate
     @Column(name = "created_at", nullable = false, updatable = false)
@@ -41,9 +38,10 @@ public abstract class Auditable {
 
     @PrePersist
     public void beforePersist(){
-        var userId = RequestContext.getUserId();
-        if (userId == null)
-            throw new ApiException("Cannot persist entity without user ID in Request Context for the thread");
+        var userId = "c3641fa8-0c27-4262-80ac-0a23ad12dacf";
+//        var userId = RequestContext.getUserId();
+//        if (userId == null)
+//            throw new ApiException("Cannot persist entity without user ID in Request Context for the thread");
         setCreatedAt(now());
         setCreatedBy(userId);
         setUpdatedBy(userId);
@@ -52,9 +50,10 @@ public abstract class Auditable {
 
     @PreUpdate
     public void beforeUpdate(){
-        var userId = RequestContext.getUserId();
-        if (userId == null)
-            throw new ApiException("Cannot update entity without user ID in Request Context for the thread");
+        var userId = "c3641fa8-0c27-4262-80ac-0a23ad12dacf";
+//        var userId = RequestContext.getUserId();
+//        if (userId == null)
+//            throw new ApiException("Cannot persist entity without user ID in Request Context for the thread");
         setUpdatedAt(now());
         setUpdatedBy(userId);
     }

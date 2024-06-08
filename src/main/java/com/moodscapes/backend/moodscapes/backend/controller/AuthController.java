@@ -3,6 +3,7 @@ package com.moodscapes.backend.moodscapes.backend.controller;
 import com.moodscapes.backend.moodscapes.backend.dto.request.AuthRequestDTO;
 import com.moodscapes.backend.moodscapes.backend.dto.response.HttpResponse;
 import com.moodscapes.backend.moodscapes.backend.service.interfaces.IAuthService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -30,7 +31,7 @@ public class AuthController {
                 ));
     }
 
-    @PostMapping()
+    @PostMapping("/magic_link")
     public ResponseEntity<?> signInWithMagicLink(@RequestBody AuthRequestDTO request ){
         log.info(request.email());
         authService.signInWithMagicLink(request.email());
@@ -39,6 +40,7 @@ public class AuthController {
                 .body( new HttpResponse(
                         LocalDateTime.now(),
                         HttpStatus.OK.value(),
+                        "this is the path",
                         HttpStatus.OK,
                         "create Token",
                         "token crated successfully",
@@ -50,8 +52,8 @@ public class AuthController {
                 ));
     }
 
-    @PostMapping()
-    public ResponseEntity<?> signInWithGoogleOAuth(@RequestBody AuthRequestDTO request ){
+    @PostMapping("/google")
+    public ResponseEntity<HttpResponse> signInWithGoogleOAuth(@RequestBody AuthRequestDTO request ){
         log.info(request.email());
         authService.signInWithGoogleOAuth(request.email());
         return ResponseEntity
@@ -59,12 +61,34 @@ public class AuthController {
                 .body( new HttpResponse(
                         LocalDateTime.now(),
                         HttpStatus.OK.value(),
+                        "this is the path",
                         HttpStatus.OK,
                         "create Token",
                         "token crated successfully",
                         "Chiemelie wrote this",
                         Map.of(
                                 "email", request.email()
+                        )
+
+                ));
+    }
+
+    @GetMapping("/magic_link/token")
+    public ResponseEntity<HttpResponse> authenticate(@PathVariable String token, HttpServletRequest request){
+        log.info(token);
+        authService.signInWithGoogleOAuth(token);
+        return ResponseEntity
+                .ok()
+                .body( new HttpResponse(
+                        LocalDateTime.now(),
+                        HttpStatus.OK.value(),
+                        "this is the path",
+                        HttpStatus.OK,
+                        "create Token",
+                        "token crated successfully",
+                        "Chiemelie wrote this",
+                        Map.of(
+                                "email", token
                         )
 
                 ));

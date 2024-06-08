@@ -1,5 +1,7 @@
 package com.moodscapes.backend.moodscapes.backend.domain;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * @author Moodscapes
  * @version 1.0
@@ -8,18 +10,25 @@ package com.moodscapes.backend.moodscapes.backend.domain;
  * @since 05/12/24
  * @developer chiemelie nwobdodo, alvin dera
  */
+@Slf4j
 public class RequestContext {
 
-    private static final ThreadLocal<Long> USER_ID = new ThreadLocal<>();
+    private static final ThreadLocal<String> USER_ID = new ThreadLocal<>();
 
     private RequestContext(){}
 
-    public static void start(){USER_ID.remove();}
+    public static void start(){
+//        log.info("user was removed {}" USER_ID.remove());
+        USER_ID.remove();
+    }
 
-    public static void setUserId(Long userId){
+    public static void setUserId(String userId){
         USER_ID.set(userId);
     }
 
-    public static Long getUserId(){return USER_ID.get();}
+    public static String getUserId(){
+        System.out.println(USER_ID.get());
+        return USER_ID.get();
+    }
 
 }
