@@ -84,8 +84,10 @@ public class MagicService extends AuthService implements IMagicService{
             log.info("did your user request reach here again? " + userRequestDTO);
             log.info("what is the confirm token saying? " + confirmToken);
             System.out.println("did it confirm to get email? " + confirmToken.getEmail());
-//            var user = userService.findUserByEmail(confirmToken.getEmail());
-//            log.info("did you find user email? " + user);
+            var user = userService.findUserByEmail(confirmToken.getEmail());
+            boolean enabled = true;
+            log.info("is enabled set to " + enabled);
+            if (user != null) user.setEnabled(enabled);
             if (userService.getUserByEmail(confirmToken.getEmail()) == false) {
                 log.info("boolean find user {} " + userService.getUserByEmail(confirmToken.getEmail()));
                 userService.createUser(userRequestDTO);
@@ -94,8 +96,6 @@ public class MagicService extends AuthService implements IMagicService{
                 signingInUser();
             }
 
-            boolean enabled = true;
-            log.info("is enabled set to true " + enabled);
             auth.deleteById(confirmToken.getId());
         }
         catch(Exception ex) {
