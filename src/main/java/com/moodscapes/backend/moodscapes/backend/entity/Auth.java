@@ -32,7 +32,7 @@ public class Auth{
     private SignInMethod methodProvider;
     private LocalDateTime lastLogin;
     private boolean isNotLocked;
-    @Transient
+//    @Transient
     private String token;
     private LocalDateTime createdAt;
 
