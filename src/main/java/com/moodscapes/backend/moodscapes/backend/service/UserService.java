@@ -1,6 +1,5 @@
 package com.moodscapes.backend.moodscapes.backend.service;
 
-import com.moodscapes.backend.moodscapes.backend.domain.RequestContext;
 import com.moodscapes.backend.moodscapes.backend.dto.request.UserRequestDTO;
 import com.moodscapes.backend.moodscapes.backend.entity.Credential;
 import com.moodscapes.backend.moodscapes.backend.entity.User;
@@ -67,7 +66,16 @@ public class UserService implements IUserService {
 
     @Override
     public boolean getUserByEmail(String email) {
-        boolean existsByEmail = userRepo.existsByEmail(email);
+        var existsByEmail = userRepo.existsByEmail(email);
         return existsByEmail;
     }
+
+    @Override
+    public User findUserByEmail(String email) {
+        var existsByEmail = userRepo.findByEmail(email);
+        return existsByEmail.orElseThrow(
+                () -> new ApiException("user with email {} not found " + email)
+        );
+    }
+
 }
