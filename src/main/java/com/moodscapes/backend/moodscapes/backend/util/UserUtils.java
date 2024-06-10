@@ -12,10 +12,8 @@ import java.util.UUID;
 public class UserUtils {
 
     public static User createUserEntity(String email, String fullName, Set<Role> role){
-         // Assuming username is the user ID
+
         String userId=UUID.randomUUID().toString();
-//        RequestContext.start();
-//        RequestContext.setUserId(userId);
         return User
                 .builder()
                 .userId(userId)
