@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Repository
 public interface AuthRepo extends JpaRepository<Auth, String> {
@@ -15,5 +16,6 @@ public interface AuthRepo extends JpaRepository<Auth, String> {
     @Transactional
     @Query("DELETE FROM Auth a WHERE a.createdAt < :threshold")
     void deleteExpired(LocalDateTime threshold);
-    Auth findByToken(String token);
+
+    Optional<Auth> findByToken(String token);
 }
