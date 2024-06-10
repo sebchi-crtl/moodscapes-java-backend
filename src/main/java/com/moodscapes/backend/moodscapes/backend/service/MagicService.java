@@ -1,5 +1,7 @@
 package com.moodscapes.backend.moodscapes.backend.service;
 
+import com.moodscapes.backend.moodscapes.backend.dto.request.UserRequestDTO;
+import com.moodscapes.backend.moodscapes.backend.exception.ApiException;
 import com.moodscapes.backend.moodscapes.backend.repository.AuthRepo;
 import com.moodscapes.backend.moodscapes.backend.entity.Auth;
 import com.moodscapes.backend.moodscapes.backend.service.interfaces.IEmailService;
@@ -10,13 +12,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.context.SecurityContextHolderStrategy;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -29,9 +25,8 @@ import static com.moodscapes.backend.moodscapes.backend.enumeration.SignInMethod
 public class MagicService extends AuthService implements IMagicService{
 
     private final AuthRepo auth;
-    private IUserService userService;
+    private final IUserService userService;
     private final IEmailService emailService;
-    private UserDetailsService userDetailsService;
 //    private SecurityContextHolder strategy;
 
     @Override
@@ -49,11 +44,15 @@ public class MagicService extends AuthService implements IMagicService{
     @Override
     public void sendAuthentication(String email) {
         try{
-            var user =  userDetailsService.loadUserByUsername(email);
+            log.info("this is the String email {} " + email);
+//            var user =  userDetailsService.loadUserByUsername(email);
             String token = issueToken(email);
-            var username = user.getUsername();
-            Auth magic = saveToken(username, token);
-            if (userService.getUserByEmail(username))
+            log.info("This is the token {} "+token);
+//            var username = user.getUsername();
+//            log.info("This is the load userDetailsService {} "+username);
+            Auth magic = saveToken(email, token);
+            log.info("This is the auth Magic {} "+magic);
+            if (userService.getUserByEmail(email))
                 emailService.sendMagicTokenMail(magic);
             else emailService.sendMagicTokenMailToNewUser(magic);
         }catch (Exception ex){
@@ -78,31 +77,39 @@ public class MagicService extends AuthService implements IMagicService{
 
     @Override
     @Transactional
-    protected void authenticate(String token, HttpServletRequest request, HttpServletResponse response) {
-        Auth entity = auth.findByToken(token);
+    protected void authenticate(String token, UserRequestDTO userRequestDTO) {
+        try {
+            var confirmToken = getAuthConfirmToken(token);
+            System.out.println("did the token come in here again? " + token);
+            log.info("did your user request reach here again? " + userRequestDTO);
+            log.info("what is the confirm token saying? " + confirmToken);
+            System.out.println("did it confirm to get email? " + confirmToken.getEmail());
+//            var user = userService.findUserByEmail(confirmToken.getEmail());
+//            log.info("did you find user email? " + user);
+            if (userService.getUserByEmail(confirmToken.getEmail()) == false) {
+                log.info("boolean find user {} " + userService.getUserByEmail(confirmToken.getEmail()));
+                userService.createUser(userRequestDTO);
+            } else {
+                log.info("authenticating user {} " + userRequestDTO);
+                signingInUser();
+            }
 
-        if (entity != null){
-            var user = userDetailsService.loadUserByUsername(entity.getEmail());
-            var userDetails = new User(
-                    user.getPassword(),
-                    user.getUsername(),
-                    user.getAuthorities()
-            );
-
-            var authentication = new UsernamePasswordAuthenticationToken(
-                    userDetails,
-                    user.getPassword(),
-                    user.getAuthorities()
-            );
-            SecurityContextHolderStrategy strategy = SecurityContextHolder.getContextHolderStrategy();
-            SecurityContext context = strategy.createEmptyContext();
-            context.setAuthentication(authentication);
-            strategy.setContext(context);
-            HttpSessionSecurityContextRepository repository = new HttpSessionSecurityContextRepository();
-            repository.saveContext(context, request, response);
-            auth.deleteById(entity.getId());
-
+            boolean enabled = true;
+            log.info("is enabled set to true " + enabled);
+            auth.deleteById(confirmToken.getId());
         }
+        catch(Exception ex) {
+            throw new ApiException(ex.getMessage());
+        }
+    }
+
+    private void signingInUser() {
+        log.info("signing in user");
+    }
+
+    private Auth getAuthConfirmToken(String token) {
+        log.info("This is the token " + token + " and receiving the error");
+        return auth.findByToken(token).orElseThrow(() -> new ApiException("token not found"));
     }
 
 }
