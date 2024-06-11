@@ -78,4 +78,10 @@ public class UserService implements IUserService {
         );
     }
 
+    @Override
+    public Optional<User> getaUserByEmail(String email) {
+        User  byEmail = userRepo.findAByEmail(email);
+        return Optional.ofNullable(byEmail);
+    }
+
 }
