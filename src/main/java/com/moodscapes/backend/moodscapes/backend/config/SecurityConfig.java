@@ -25,13 +25,15 @@ import static com.moodscapes.backend.moodscapes.backend.constant.SecurityConstan
 )
 public class SecurityConfig {
 
+    private final AuthenticationConfiguration config;
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+    public AuthenticationManager authenticationManager() throws Exception {
         return config.getAuthenticationManager();
     }
 
