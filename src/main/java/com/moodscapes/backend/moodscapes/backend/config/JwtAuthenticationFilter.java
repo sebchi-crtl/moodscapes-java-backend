@@ -1,8 +1,8 @@
 package com.moodscapes.backend.moodscapes.backend.config;
 
-import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.moodscapes.backend.moodscapes.backend.dto.request.AuthenticationRequest;
+import com.moodscapes.backend.moodscapes.backend.service.interfaces.IJwtProvider;
 import com.moodscapes.backend.moodscapes.backend.service.interfaces.IUserService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -14,15 +14,13 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
 import static com.fasterxml.jackson.core.JsonParser.Feature.AUTO_CLOSE_SOURCE;
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
+import static com.moodscapes.backend.moodscapes.backend.util.RequestUtils.handleErrorRequest;
 
 @Slf4j
 public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
@@ -59,13 +57,13 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
         }
         catch (Exception e) {
             log.error(e.getMessage());
-            //handleErrorRequest(request, response, exception)
+            handleErrorRequest(request, response, e);
             return null;
         }
     }
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException, ServletException {
-        super.successfulAuthentication(request, response, chain, authResult);
+        super.successfulAuthentication(request, response, chain, authentication);
     }
 }
