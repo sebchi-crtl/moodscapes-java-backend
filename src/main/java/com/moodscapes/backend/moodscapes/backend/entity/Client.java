@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -15,9 +16,11 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_DEFAULT;
 @NoArgsConstructor
 @Table(name = "client")
 @Entity
+@Builder
 @JsonInclude(NON_DEFAULT)
 public class Client extends Auditable{
-    private String userID;
+    private String eventId;
+    private String userId;
     private String firstName;
     private String lastName;
     private String country;

@@ -10,8 +10,8 @@ import java.util.List;
 @Data
 @Builder
 public class TokenData {
-    private UserPrincipal userPrincipal;
-//    private Claims claims;
+    private UserPrincipal user;
+    private Claims claims;
     private boolean valid;
     private List<GrantedAuthority> authorities;
 }

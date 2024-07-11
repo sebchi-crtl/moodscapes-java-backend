@@ -4,11 +4,15 @@ import java.time.LocalDateTime;
 
 public record ClientResponseDTO(
         String id,
+        String eventId,
         String userId,
-        String title,
-        String location,
-        boolean available,
-        String note,
-        LocalDateTime createdAt
+        String firstName,
+        String lastName,
+        String country,
+        String phoneNumber,
+        String email,
+        float budget,
+        String notes,
+        boolean active
 ) {
 }

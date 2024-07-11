@@ -1,9 +1,13 @@
 package com.moodscapes.backend.moodscapes.backend.service;
 
 import com.moodscapes.backend.moodscapes.backend.dto.request.UserRequestDTO;
+import com.moodscapes.backend.moodscapes.backend.dto.response.AuthResponseDTO;
+import com.moodscapes.backend.moodscapes.backend.dto.response.HttpResponse;
+import com.moodscapes.backend.moodscapes.backend.entity.NewUserCheck;
 import com.moodscapes.backend.moodscapes.backend.exception.ApiException;
 import com.moodscapes.backend.moodscapes.backend.repository.AuthRepo;
 import com.moodscapes.backend.moodscapes.backend.entity.Auth;
+import com.moodscapes.backend.moodscapes.backend.repository.NewUserCheckRepo;
 import com.moodscapes.backend.moodscapes.backend.service.interfaces.IEmailService;
 import com.moodscapes.backend.moodscapes.backend.service.interfaces.IMagicService;
 import com.moodscapes.backend.moodscapes.backend.service.interfaces.IUserService;
@@ -12,12 +16,15 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.http.HttpRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 
 import static com.moodscapes.backend.moodscapes.backend.enumeration.SignInMethod.MagicLink;
+import static java.time.LocalDateTime.now;
+import static java.util.Optional.empty;
 
 @Service
 @RequiredArgsConstructor
@@ -27,7 +34,7 @@ public class MagicService extends AuthService implements IMagicService{
     private final AuthRepo auth;
     private final IUserService userService;
     private final IEmailService emailService;
-//    private SecurityContextHolder strategy;
+    private final NewUserCheckRepo newUserCheckRepo;
 
     @Override
     public String token() {
@@ -69,7 +76,7 @@ public class MagicService extends AuthService implements IMagicService{
                         .email(email)
                         .token(token)
                         .methodProvider(MagicLink)
-                        .createdAt(LocalDateTime.now())
+                        .createdAt(now())
                         .build()
         );
         return magic;
@@ -77,29 +84,29 @@ public class MagicService extends AuthService implements IMagicService{
 
     @Override
     @Transactional
-    protected void authenticate(String token, UserRequestDTO userRequestDTO) {
+    protected void authenticate(String token) {
         try {
             var confirmToken = getAuthConfirmToken(token);
             System.out.println("did the token come in here again? " + token);
-            log.info("did your user request reach here again? " + userRequestDTO);
             log.info("what is the confirm token saying? " + confirmToken);
             System.out.println("did it confirm to get email? " + confirmToken.getEmail());
-            var user = userService.findUserByEmail(confirmToken.getEmail());
-            boolean enabled = true;
-            log.info("is enabled set to " + enabled);
-            if (user != null) user.setEnabled(enabled);
-            if (userService.getUserByEmail(confirmToken.getEmail()) == false) {
-                log.info("boolean find user {} " + userService.getUserByEmail(confirmToken.getEmail()));
-                userService.createUser(userRequestDTO);
-            } else {
-                log.info("authenticating user {} " + userRequestDTO);
-                signingInUser();
-            }
+            String email = confirmToken.getEmail();
+            var user = userService.getaUserByEmail(email);
+            if (user != null) signingInUser();
 
+            var existingCheck = newUserCheckRepo.findByEmail(email);
+            if (existingCheck == null) {
+                var newCheck = new NewUserCheck(true, email);
+                log.info("User check: " + newCheck);
+                newUserCheckRepo.save(newCheck);
+            } else {
+                log.info("User check already exists for email: " + email);
+            }
             auth.deleteById(confirmToken.getId());
         }
         catch(Exception ex) {
-            throw new ApiException(ex.getMessage());
+            log.error("Error in authenticate method: " + ex.getMessage());
+            throw new ApiException("Failed to authenticate: " + ex.getMessage());
         }
     }
 

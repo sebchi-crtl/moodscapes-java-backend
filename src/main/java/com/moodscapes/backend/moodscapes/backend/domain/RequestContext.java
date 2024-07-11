@@ -12,13 +12,9 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 public class RequestContext {
-
     private static final ThreadLocal<String> USER_ID = new ThreadLocal<>();
-
-    private RequestContext(){}
-
     public static void start(){
-//        log.info("user was removed {}" USER_ID.remove());
+        log.info("user was removed {}" + USER_ID);
         USER_ID.remove();
     }
 

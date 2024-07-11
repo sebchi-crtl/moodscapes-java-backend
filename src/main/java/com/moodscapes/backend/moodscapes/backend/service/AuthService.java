@@ -4,8 +4,12 @@ import com.moodscapes.backend.moodscapes.backend.dto.request.UserRequestDTO;
 import com.moodscapes.backend.moodscapes.backend.entity.Auth;
 import com.moodscapes.backend.moodscapes.backend.exception.ApiException;
 import com.moodscapes.backend.moodscapes.backend.service.interfaces.IAuthService;
+import com.moodscapes.backend.moodscapes.backend.service.interfaces.IUserService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpRequest;
 
 import java.security.SecureRandom;
 import java.util.List;
@@ -13,6 +17,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @Slf4j
+@RequiredArgsConstructor
 public abstract class AuthService implements IAuthService {
 
     private static final SecureRandom random = new SecureRandom();
@@ -44,15 +49,15 @@ public abstract class AuthService implements IAuthService {
     }
 
     @Transactional
-    protected abstract void authenticate(String token, UserRequestDTO userRequestDTO);
+    protected abstract void authenticate(String token);
 
 
     @Override
-    public void signInWithMagicLink(String token, UserRequestDTO userRequestDTO) {
+    public void signInWithMagicLink(String token, HttpServletRequest request) {
         try {
             System.out.println("did the token come in here? " + token);
-            log.info("did your user request reach here? " + userRequestDTO);
-            authenticate(token, userRequestDTO);
+
+            authenticate(token);
         }
         catch(Exception ex){
             throw new ApiException(ex.getMessage());

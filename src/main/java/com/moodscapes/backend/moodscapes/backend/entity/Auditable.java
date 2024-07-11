@@ -1,6 +1,8 @@
 package com.moodscapes.backend.moodscapes.backend.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.moodscapes.backend.moodscapes.backend.domain.RequestContext;
+import com.moodscapes.backend.moodscapes.backend.exception.ApiException;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -38,10 +40,11 @@ public abstract class Auditable {
 
     @PrePersist
     public void beforePersist(){
-        var userId = "c3641fa8-0c27-4262-80ac-0a23ad12dacf";
-//        var userId = RequestContext.getUserId();
-//        if (userId == null)
-//            throw new ApiException("Cannot persist entity without user ID in Request Context for the thread");
+//        var userId = getId();
+//        var userId = "c3641fa8-0c27-4262-80ac-0a23ad12dacf";
+        var userId = RequestContext.getUserId();
+        if (userId == null)
+            throw new ApiException("Cannot persist entity without user ID in Request Context for the thread");
         setCreatedAt(now());
         setCreatedBy(userId);
         setUpdatedBy(userId);
@@ -50,10 +53,10 @@ public abstract class Auditable {
 
     @PreUpdate
     public void beforeUpdate(){
-        var userId = "c3641fa8-0c27-4262-80ac-0a23ad12dacf";
-//        var userId = RequestContext.getUserId();
-//        if (userId == null)
-//            throw new ApiException("Cannot persist entity without user ID in Request Context for the thread");
+//        var userId = getId();
+        var userId = RequestContext.getUserId();
+        if (userId == null)
+            throw new ApiException("Cannot persist entity without user ID in Request Context for the thread");
         setUpdatedAt(now());
         setUpdatedBy(userId);
     }

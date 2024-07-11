@@ -13,14 +13,17 @@ public class EventMapper implements Function<Event, EventResponseDTO> {
     @Override
     public EventResponseDTO apply(Event event) {
         return new EventResponseDTO(
-                event.getEventId(),
+                event.getId(),
                 event.getUserId(),
                 event.getTitle(),
+                event.getEventCategory(),
                 event.getLocation(),
-                event.isAvailable(),
-                event.getNote(),
-                event.getCreatedAt()
-
+                event.getEventDate(),
+                event.getCurrency(),
+                event.getNotes(),
+                event.getSharedUserId(),
+                event.getCreatedBy(),
+                event.getUpdatedBy()
         );
     }
 }

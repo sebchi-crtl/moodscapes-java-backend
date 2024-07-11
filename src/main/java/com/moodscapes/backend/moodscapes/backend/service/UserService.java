@@ -1,12 +1,16 @@
 package com.moodscapes.backend.moodscapes.backend.service;
 
+import com.moodscapes.backend.moodscapes.backend.domain.UserPrincipal;
 import com.moodscapes.backend.moodscapes.backend.dto.request.UserRequestDTO;
 import com.moodscapes.backend.moodscapes.backend.entity.Credential;
+import com.moodscapes.backend.moodscapes.backend.entity.NewUserCheck;
 import com.moodscapes.backend.moodscapes.backend.entity.User;
 import com.moodscapes.backend.moodscapes.backend.enumeration.Role;
+import com.moodscapes.backend.moodscapes.backend.enumeration.converter.RoleConverter;
 import com.moodscapes.backend.moodscapes.backend.exception.ApiException;
 import com.moodscapes.backend.moodscapes.backend.exception.RequestValidationException;
 import com.moodscapes.backend.moodscapes.backend.repository.CredentialRepo;
+import com.moodscapes.backend.moodscapes.backend.repository.NewUserCheckRepo;
 import com.moodscapes.backend.moodscapes.backend.repository.UserRepo;
 import com.moodscapes.backend.moodscapes.backend.service.interfaces.IUserService;
 import jakarta.transaction.Transactional;
@@ -18,6 +22,7 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 
 import static com.moodscapes.backend.moodscapes.backend.util.UserUtils.createUserEntity;
+import static com.moodscapes.backend.moodscapes.backend.util.UserUtils.fromUserPrincipal;
 
 @Service
 @RequiredArgsConstructor
@@ -27,16 +32,26 @@ public class UserService implements IUserService {
     private final UserRepo userRepo;
     private final CredentialRepo credentialRepo;
     private final ApplicationEventPublisher publisher;
+    private final NewUserCheckRepo newUserCheckRepo;
+    private final RoleConverter roleConverter;
 
     @Override
     public void createUser(UserRequestDTO request) {
         try{
-            if (!getUserByEmail(request.email())){
-                var user = userRepo.save(createNewUser(request.email(), request.fullName(), request.role()));
-                String password = shuffleString(request.email());
-                var credential = new Credential(user, password);
-                credentialRepo.save(credential);
-                publisher.publishEvent(new UserEvent( this, user, true));
+            String email = request.email();
+            if (!getUserByEmail(email)){
+//                if (findNewUserByEmail(email).isNewUser()){
+                    var user = userRepo.save(createNewUser(email, request.fullName(), request.role()));
+                    String password = shuffleString(email);
+                    var credential = new Credential(user, password);
+                    credentialRepo.save(credential);
+                    publisher.publishEvent(new UserEvent( this, user, true));
+                    //TODO: SIGN-IN METHOD
+//                }
+//                else {
+//                    throw new ApiException("you are not allowed to create a user");
+//                }
+
             }
             else throw new ApiException("User Already exists");
         }
@@ -63,11 +78,20 @@ public class UserService implements IUserService {
     private User createNewUser(String email, String fullName, Set<Role> role) {
         return createUserEntity(email, fullName, role);
     }
+    private NewUserCheck findNewUserByEmail(String email){
+        return newUserCheckRepo.findByEmail(email).orElse(null);
+    }
 
     @Override
     public boolean getUserByEmail(String email) {
         var existsByEmail = userRepo.existsByEmail(email);
         return existsByEmail;
+    }
+
+    @Override
+    public boolean getUserById(String email) {
+        var existsById = userRepo.existsById(email);
+        return existsById;
     }
 
     @Override
@@ -80,8 +104,31 @@ public class UserService implements IUserService {
 
     @Override
     public Optional<User> getaUserByEmail(String email) {
-        User  byEmail = userRepo.findAByEmail(email);
+        User byEmail = userRepo.findAByEmail(email);
         return Optional.ofNullable(byEmail);
     }
+
+    @Override
+    public UserPrincipal getUserPrincipalByEmail(String email) {
+        var byEmail = userRepo.findUserPrincipalByEmail(email);
+        return byEmail.orElse(null);
+    }
+
+    @Override
+    public Credential getUserCredentialById(String id) {
+        var credentialId = credentialRepo.getCredentialByUserAuth_UserId(id);
+        return credentialId.orElseThrow(() -> new ApiException("unable to find user credential"));
+    }
+    @Override
+    public UserPrincipal findUserPrincipalByEmail(String email) {
+        User user = findUserByEmail(email);
+        return fromUser(user, Role.valueOf(user.getRole().toString()), getUserCredentialById(user.getId()));
+    }
+
+    private UserPrincipal fromUser(User user, Role role, Credential userCredentialById) {
+//        UserUtils userUtils = new UserUtils();
+        return fromUserPrincipal(user, roleConverter.convertToEntityAttribute(role.name()), userCredentialById);
+    }
+
 
 }

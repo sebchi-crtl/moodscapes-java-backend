@@ -5,10 +5,12 @@ import com.moodscapes.backend.moodscapes.backend.dto.request.UserRequestDTO;
 import com.moodscapes.backend.moodscapes.backend.dto.response.HttpResponse;
 import com.moodscapes.backend.moodscapes.backend.exception.ApiException;
 import com.moodscapes.backend.moodscapes.backend.service.interfaces.IAuthService;
+import com.moodscapes.backend.moodscapes.backend.service.interfaces.IUserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,6 +31,7 @@ import static org.springframework.http.HttpStatus.OK;
 public class AuthController {
 
     private final IAuthService authService;
+    private final IUserService userService;
 
     @GetMapping
     public ResponseEntity<Map<String, String>> test(){
@@ -41,60 +44,49 @@ public class AuthController {
     }
 
     @PostMapping("/magic_link")
-    public ResponseEntity<?> signInWithMagicLink(@RequestBody AuthRequestDTO request ){
-        log.info(request.email());
-        authService.sendMagicLinkToken(request.email());
-        return ResponseEntity
-                .ok()
-                .body( new HttpResponse(
-                        LocalDateTime.now(),
-                        HttpStatus.OK.value(),
-                        "this is the path",
-                        HttpStatus.OK,
-                        "create Token",
-                        "token crated successfully",
-                        "Chiemelie wrote this",
-                        Map.of(
-                                "email", request.email()
-                        )
-
-                ));
+    public ResponseEntity<?> signInWithMagicLink(@RequestBody AuthRequestDTO requestDTO, HttpServletRequest request){
+        try {
+            log.info(requestDTO.email());
+            authService.sendMagicLinkToken(requestDTO.email());
+            return ResponseEntity
+                    .ok()
+                    .body( getResponse(request, Map.of(
+                            "email", requestDTO.email(),
+                            "user", "token sent"
+                    ), "magic link token sent", OK));
+        }
+        catch (Exception ex) {
+            log.error("Error getting message: {}", ex.getMessage());
+            throw new ApiException(ex.getMessage());
+        }
     }
 
     @PostMapping("/google")
-    public ResponseEntity<HttpResponse> signInWithGoogleOAuth(@RequestBody AuthRequestDTO request ){
-        log.info(request.email());
-        authService.signInWithGoogleOAuth(request.email());
+    public ResponseEntity<HttpResponse> signInWithGoogleOAuth(@RequestBody AuthRequestDTO requestDTO, HttpServletRequest request ){
+        log.info(requestDTO.email());
+        authService.signInWithGoogleOAuth(requestDTO.email());
         return ResponseEntity
                 .ok()
-                .body( new HttpResponse(
-                        LocalDateTime.now(),
-                        HttpStatus.OK.value(),
-                        "this is the path",
-                        HttpStatus.OK,
-                        "create Token",
-                        "token crated successfully",
-                        "Chiemelie wrote this",
-                        Map.of(
-                                "email", request.email()
-                        )
-
-                ));
+                .body( getResponse(request, Map.of(
+                        "email", requestDTO.email(),
+                        "user", "create user"
+                ), "Account Ready", OK));
     }
 
     @GetMapping("/magic_link/{token}")
-    public ResponseEntity<HttpResponse> authenticate(@PathVariable String token, HttpServletRequest request, @RequestBody UserRequestDTO userRequestDTO){
+    public ResponseEntity<HttpResponse> authenticate(@PathVariable String token, HttpServletRequest request){
         try {
             log.info(token);
-            authService.signInWithMagicLink(token, userRequestDTO);
-            log.info("this is your user request " + userRequestDTO);
+            authService.signInWithMagicLink(token, request);
             return ResponseEntity
                     .ok()
                     .body(getResponse(request, Map.of(
-                            "token", token
+                            "token", token,
+                            "user", "create user"
                     ), "Account Ready", OK));
         }
         catch (Exception ex){
+            log.error("Error getting message: {}", ex.getMessage());
             throw new ApiException(ex.getMessage());
         }
     }

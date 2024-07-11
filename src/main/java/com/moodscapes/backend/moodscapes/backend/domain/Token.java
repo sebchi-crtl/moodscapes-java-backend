@@ -6,7 +6,6 @@ import lombok.Data;
 @Data
 @Builder
 public class Token {
-
     private String access;
     private String refresh;
 }

@@ -1,8 +1,10 @@
-package com.moodscapes.backend.moodscapes.backend.config;
+package com.moodscapes.backend.moodscapes.backend.config.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.moodscapes.backend.moodscapes.backend.domain.UserPrincipal;
 import com.moodscapes.backend.moodscapes.backend.dto.request.AuthenticationRequest;
-import com.moodscapes.backend.moodscapes.backend.service.interfaces.IJwtProvider;
+import com.moodscapes.backend.moodscapes.backend.dto.response.HttpResponse;
+import com.moodscapes.backend.moodscapes.backend.enumeration.TokenType;
 import com.moodscapes.backend.moodscapes.backend.service.interfaces.IUserService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -18,9 +20,17 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.Objects;
 
 import static com.fasterxml.jackson.core.JsonParser.Feature.AUTO_CLOSE_SOURCE;
+import static com.moodscapes.backend.moodscapes.backend.constant.SecurityConstants.LOGIN_PATH;
+import static com.moodscapes.backend.moodscapes.backend.enumeration.TokenType.*;
+import static com.moodscapes.backend.moodscapes.backend.enumeration.TokenType.REFRESH;
+import static com.moodscapes.backend.moodscapes.backend.util.RequestUtils.getResponse;
 import static com.moodscapes.backend.moodscapes.backend.util.RequestUtils.handleErrorRequest;
+import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @Slf4j
 public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
@@ -28,7 +38,7 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
     private final IUserService userService;
     private final IJwtProvider jwtProvider;
     public JwtAuthenticationFilter(AuthenticationManager manager, IUserService userService, IJwtProvider jwtProvider) {
-        super(new AntPathRequestMatcher("/api/v1/login"), manager);
+        super(new AntPathRequestMatcher(LOGIN_PATH), manager);
         this.userService = userService;
         this.jwtProvider = jwtProvider;
         //        setFilterProcessesUrl("/api/login", POST.name(), manager);
@@ -64,6 +74,20 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException, ServletException {
-        super.successfulAuthentication(request, response, chain, authentication);
+        var user = (UserPrincipal) authentication.getPrincipal();
+//        userService.
+        var httpResponse = sendResponse(request, response, user);
+        response.setContentType(APPLICATION_JSON_VALUE);
+        response.setStatus(OK.value());
+        var out = response.getOutputStream();
+        var mapper = new ObjectMapper();
+        mapper.writeValue(out, httpResponse);
+        out.flush();
+    }
+
+    private HttpResponse sendResponse(HttpServletRequest request, HttpServletResponse response, UserPrincipal user) {
+        jwtProvider.addCookie(response, user, ACCESS);
+        jwtProvider.addCookie(response, user, REFRESH);
+        return  getResponse(request, Map.of("user", user), "Login Success", OK);
     }
 }

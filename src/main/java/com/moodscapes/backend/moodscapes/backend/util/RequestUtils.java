@@ -56,12 +56,12 @@ public class RequestUtils {
             Exception exception)
     {
         if (exception instanceof AccessDeniedException){
-            var apiResponse = getErrorRespose(request, response, exception, FORBIDDEN);
+            var apiResponse = getErrorResponse(request, response, exception, FORBIDDEN);
             writeResponse.accept(response, apiResponse);
         }
     }
 
-    private static HttpResponse getErrorRespose(HttpServletRequest request, HttpServletResponse response, Exception exception, HttpStatus status) {
+    private static HttpResponse getErrorResponse(HttpServletRequest request, HttpServletResponse response, Exception exception, HttpStatus status) {
         response.setContentType(APPLICATION_JSON_VALUE);
         response.setStatus(status.value());
         return new HttpResponse(now(), status.value(), request.getRequestURI(), HttpStatus.valueOf(status.value()), errorReason.apply(exception, status), getRootCauseMessage(exception), "", emptyMap());

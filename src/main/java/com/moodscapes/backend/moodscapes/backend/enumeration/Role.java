@@ -1,5 +1,10 @@
 package com.moodscapes.backend.moodscapes.backend.enumeration;
 
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
+
+import java.util.Collection;
+
 import static com.moodscapes.backend.moodscapes.backend.constant.SecurityConstants.*;
 
 public enum Role {
@@ -43,7 +48,7 @@ public enum Role {
         return description;
     }
 
-    public String getAuthorities() {
-        return authorities;
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return AuthorityUtils.commaSeparatedStringToAuthorityList(authorities);
     }
 }

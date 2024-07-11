@@ -37,12 +37,10 @@ public class EmailService implements IEmailService {
         String magicLink = baseUrl + "/api/v1/auth/magic-link/{}" + token.getToken();
         try {
             log.info("{} has link {}", token.getEmail(), magicLink);
-//            var message = new SimpleMailMessage();
-//            message.setSubject(MAGIC_LINK_EMAIL_VERFICATION);
-//            message.setFrom(fromEmail);
-//            message.setTo(token.getEmail());
-//            message.setText(getTokenEmailMessage(token.getToken(), token.getEmail(), host));
-//            mailSender.send(message);
+//            var mailSender1 = getMailSender(token.getEmail());
+//            mailSender1.setSubject(MAGIC_LINK_EMAIL_VERFICATION);
+//            mailSender1.setText(getTokenEmailMessage(token.getToken(), token.getEmail(), host));
+//            mailSender.send(mailSender1);
 
         }
         catch (MailException e){
@@ -54,18 +52,23 @@ public class EmailService implements IEmailService {
         }
     }
 
+    public SimpleMailMessage getMailSender(String to) {
+        var message = new SimpleMailMessage();
+        message.setFrom(fromEmail);
+        message.setTo(to);
+        return message;
+    }
+
     @Override
     @Async
     public void sendMagicTokenMailToNewUser(Auth account) {
         String magicLink = baseUrl + "/api/v1/auth/magic-link/{}" + account.getToken();
         try {
             log.info("{} has link {}", account.getEmail(), magicLink);
-            var message = new SimpleMailMessage();
-            message.setSubject(NEW_USER_ACCOUNT_WELCOME);
-            message.setFrom(fromEmail);
-            message.setTo(account.getEmail());
-            message.setText(getNewAccountEmailMessage(account.getToken(), account.getEmail(), host));
-            mailSender.send(message);
+//            var mailSender1 = getMailSender(account.getEmail());
+//            mailSender1.setSubject(NEW_USER_ACCOUNT_WELCOME);
+//            mailSender1.setText(getNewAccountEmailMessage(account.getToken(), account.getEmail(), host));
+//            mailSender.send(mailSender1);
         } catch (Exception e) {
             log.error(e.getMessage());
             throw new RuntimeException("Unable to send email");

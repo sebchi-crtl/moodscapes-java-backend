@@ -2,7 +2,6 @@ package com.moodscapes.backend.moodscapes.backend.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.GenericGenerator;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -13,16 +12,14 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 public class Event extends Auditable {
-    private String eventId;
     private String userId;
     private String title;
-//    private EventCategoryId eventCategoryId;
+    @ManyToOne
+    @JoinColumn(name = "event_category_id", referencedColumnName = "id")
+    private EventCategory eventCategory;
     private String location;
     private LocalDateTime eventDate;
+    private String currency;
+    private String notes;
     private List<String> sharedUserId;
-    private int currencyId;
-//    private Client clientId;
-    private int guest;
-    private boolean available;
-    private String note;
 }

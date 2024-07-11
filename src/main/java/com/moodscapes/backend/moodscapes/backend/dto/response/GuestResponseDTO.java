@@ -1,14 +1,14 @@
 package com.moodscapes.backend.moodscapes.backend.dto.response;
 
-import java.time.LocalDateTime;
-
 public record GuestResponseDTO(
         String id,
         String userId,
-        String title,
-        String location,
-        boolean available,
-        String note,
-        LocalDateTime createdAt
+        String eventId,
+        String firstName,
+        String lastName,
+        String grouping,
+        boolean rsvp,
+        String mealPreference,
+        String notes
 ) {
 }

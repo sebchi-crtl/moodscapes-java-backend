@@ -1,4 +1,4 @@
-package com.moodscapes.backend.moodscapes.backend.service.interfaces;
+package com.moodscapes.backend.moodscapes.backend.config.jwt;
 
 import com.moodscapes.backend.moodscapes.backend.domain.Token;
 import com.moodscapes.backend.moodscapes.backend.domain.TokenData;
@@ -14,7 +14,8 @@ import java.util.function.Function;
 public interface IJwtProvider {
     String generateToken(UserPrincipal auth, Function<Token, String> tokenFunction);
     Optional<String> extractToken(HttpServletRequest request, String token);
-    void addCookie(HttpServletResponse response, User user, TokenType type);
-    <T> T getTokenData(String token, Function<TokenData, String> tokenFunction);
-    boolean isTokenValid(HttpServletRequest request);
+    void addCookie(HttpServletResponse response, UserPrincipal user, TokenType type);
+    void removeCookie(HttpServletRequest request, HttpServletResponse response, String cookieName);
+    <T> T getTokenData(String token, Function<TokenData, T> tokenFunction);
+//    boolean isTokenValid(HttpServletRequest request);
 }

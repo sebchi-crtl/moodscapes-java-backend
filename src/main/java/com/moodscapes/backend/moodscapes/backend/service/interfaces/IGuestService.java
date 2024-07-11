@@ -1,15 +1,20 @@
 package com.moodscapes.backend.moodscapes.backend.service.interfaces;
 
-import com.moodscapes.backend.moodscapes.backend.dto.request.EventRequestDTO;
-import com.moodscapes.backend.moodscapes.backend.dto.response.EventResponseDTO;
+import com.moodscapes.backend.moodscapes.backend.dto.request.GuestRequestDTO;
+import com.moodscapes.backend.moodscapes.backend.dto.response.GuestResponseDTO;
+import com.moodscapes.backend.moodscapes.backend.entity.Guest;
 
 import java.util.List;
 
 public interface IGuestService {
+    List<GuestResponseDTO> getAllGuests();
+    List<GuestResponseDTO> getAllGuestsByUserId(String userId);
 
-    List<EventResponseDTO> getAllEvents();
-    EventResponseDTO getEventById(Long id);
-    EventResponseDTO addEvent(EventRequestDTO book);
-    EventResponseDTO updateEvent(Long id, EventRequestDTO updatedEvent);
-    void deleteEvent(Long id);
+    GuestResponseDTO getGuestById(String id);
+
+    GuestResponseDTO addGuest(GuestRequestDTO guestRequestDTO);
+
+    GuestResponseDTO updateGuest(String id, GuestRequestDTO updatedGuest);
+
+    String deleteGuest(String id);
 }

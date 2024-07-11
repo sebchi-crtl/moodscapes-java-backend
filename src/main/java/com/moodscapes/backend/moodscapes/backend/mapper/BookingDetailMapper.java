@@ -12,15 +12,6 @@ public class BookingDetailMapper implements Function<Event, EventResponseDTO> {
 
     @Override
     public EventResponseDTO apply(Event event) {
-        return new EventResponseDTO(
-                event.getEventId(),
-                event.getUserId(),
-                event.getTitle(),
-                event.getLocation(),
-                event.isAvailable(),
-                event.getNote(),
-                event.getCreatedAt()
-
-        );
+        return null;
     }
 }
