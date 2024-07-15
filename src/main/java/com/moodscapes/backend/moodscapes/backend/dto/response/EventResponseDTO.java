@@ -16,6 +16,6 @@ public record EventResponseDTO(
         String notes,
         List<String> sharedUserId,
         String createdBy,
-        String updatedBY
+        String updatedBy
 ) {
 }

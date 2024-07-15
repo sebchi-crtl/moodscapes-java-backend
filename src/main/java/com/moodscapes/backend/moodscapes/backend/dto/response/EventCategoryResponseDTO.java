@@ -4,6 +4,8 @@ public record EventCategoryResponseDTO(
         String id,
         String userId,
         String name,
-        String description
+        String description,
+        String createdBy,
+        String updatedBy
 ) {
 }

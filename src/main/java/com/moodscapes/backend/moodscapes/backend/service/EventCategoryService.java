@@ -1,17 +1,15 @@
 package com.moodscapes.backend.moodscapes.backend.service;
 
 import com.moodscapes.backend.moodscapes.backend.domain.RequestContext;
-import com.moodscapes.backend.moodscapes.backend.dto.request.EventRequestDTO;
-import com.moodscapes.backend.moodscapes.backend.dto.response.EventResponseDTO;
-import com.moodscapes.backend.moodscapes.backend.dto.response.EventSharedResponseDTO;
-import com.moodscapes.backend.moodscapes.backend.entity.Event;
+import com.moodscapes.backend.moodscapes.backend.dto.request.EventCategoryRequestDTO;
+import com.moodscapes.backend.moodscapes.backend.dto.response.EventCategoryResponseDTO;
+import com.moodscapes.backend.moodscapes.backend.entity.EventCategory;
 import com.moodscapes.backend.moodscapes.backend.exception.ApiException;
 import com.moodscapes.backend.moodscapes.backend.exception.RequestValidationException;
-import com.moodscapes.backend.moodscapes.backend.mapper.EventMapper;
+import com.moodscapes.backend.moodscapes.backend.mapper.EventCategoryMapper;
 import com.moodscapes.backend.moodscapes.backend.mapper.EventSharedMapper;
-import com.moodscapes.backend.moodscapes.backend.repository.EventRepo;
+import com.moodscapes.backend.moodscapes.backend.repository.EventCategoryRepo;
 import com.moodscapes.backend.moodscapes.backend.service.interfaces.IEventCategoryService;
-import com.moodscapes.backend.moodscapes.backend.service.interfaces.IEventService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -21,27 +19,26 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.moodscapes.backend.moodscapes.backend.constant.Constants.*;
-import static java.util.Collections.emptyList;
 
 @Service
 @AllArgsConstructor
 @Slf4j
 public class EventCategoryService implements IEventCategoryService {
 
-    private final EventRepo repo;
+    private final EventCategoryRepo repo;
     private final UserService userService;
-    private final EventMapper mapper;
+    private final EventCategoryMapper mapper;
     private final EventSharedMapper mapperShared;
 
     @Override
-    public List<EventResponseDTO> getAllEvents() {
-        log.info("fetching all events");
+    public List<EventCategoryResponseDTO> getAllEventCategory() {
+        log.info("fetching all categories");
         return repo.findAll().stream().map(mapper).collect(Collectors.toList());
     }
 
     @Override
-    public List<EventResponseDTO> getAllEventsByUserId(String userId) {
-        log.info("fetching all events by user's id");
+    public List<EventCategoryResponseDTO> getAllEventCategoryByUserId(String userId) {
+        log.info("fetching all event categories by user's id");
         try {
             return repo.findByUserId(userId).stream().toList();
         }
@@ -51,47 +48,42 @@ public class EventCategoryService implements IEventCategoryService {
     }
 
     @Override
-    public EventResponseDTO getEventById(String id) {
+    public EventCategoryResponseDTO getEventCategoryById(String id) {
         var event = repo.findById(id).orElseThrow(() -> new RequestValidationException(REQUEST_VALIDATION_ERROR + id));
         return mapper.apply(event);
     }
 
-    @Override
-    public boolean checkIfEventIdExists(String id) {
-        return repo.existsById(id);
-    }
+//    @Override
+//    public boolean checkIfEventIdExists(String id) {
+//        return repo.existsById(id);
+//    }
 
     @Override
-    public EventResponseDTO addEventCategory(EventRequestDTO request) {
+    public EventCategoryResponseDTO addEventCategory(EventCategoryRequestDTO request) {
         try {
-            log.info("creating event: " + request);
+            log.info("creating event category: " + request);
             var userId = userService.getUserById(request.userId());
             if (userId) {
                 RequestContext.setUserId(request.userId());
-                var build = Event
+                var build = EventCategory
                         .builder()
                         .userId(request.userId())
-                        .title(request.title())
-                        .eventCategory(request.eventCategory())
-                        .location(request.location())
-                        .eventDate(request.eventDate())
-                        .currency(request.currency())
-                        .notes(request.notes())
-                        .sharedUserId(emptyList())
+                        .name(request.name())
+                        .description(request.description())
                         .build();
-                log.info("Saving event: {}", build);
-                var savedEvent = repo.save(build);
-                log.info("Event saved successfully: {}", savedEvent);
-                return mapper.apply(savedEvent);
+                log.info("Saving event category: {}", build);
+                var savedEventCategory = repo.save(build);
+                log.info("Event category saved successfully: {}", savedEventCategory);
+                return mapper.apply(savedEventCategory);
             }
             else throw new ApiException(USER_FETCHING_ERROR);
         }
         catch (DataIntegrityViolationException exm) {
-            log.error("Error adding guest due to data integrity violation: {}", exm.getMessage(), exm);
-            throw new ApiException("Failed to add event due to data integrity violation");
+            log.error("Error adding category due to data integrity violation: {}", exm.getMessage(), exm);
+            throw new ApiException("Failed to add event category due to data integrity violation");
         }
         catch (Exception ex) {
-            log.error("Error adding event: {}", ex.getMessage(), ex);
+            log.error("Error adding event category: {}", ex.getMessage(), ex);
             throw new ApiException(ex.getMessage());
         }
         finally {
@@ -100,31 +92,27 @@ public class EventCategoryService implements IEventCategoryService {
     }
 
     @Override
-    public EventResponseDTO updateEvent(String id, EventRequestDTO request) {
+    public EventCategoryResponseDTO updateEventCategory(String id, EventCategoryRequestDTO request) {
         try {
             log.info("updating guest: " + request);
-            var event = repo.findById(id)
+            var eventCategory = repo.findById(id)
                     .orElseThrow(() -> new RequestValidationException(REQUEST_VALIDATION_ERROR + id));
-            var userId = userService.getUserById(event.getUserId());
+            var userId = userService.getUserById(eventCategory.getUserId());
             RequestContext.setUserId(request.userId());
             if (userId) {
-                var updatedEvent = Event
+                var updatedEventCategory = EventCategory
                         .builder()
-                        .userId(event.getUserId())
-                        .title(request.title() != null ? request.title() : event.getTitle())
-                        .eventCategory(request.eventCategory() != null ? request.eventCategory() : event.getEventCategory())
-                        .location(request.location() != null ? request.location() : event.getLocation())
-                        .eventDate(request.eventDate() != null ? request.eventDate() : event.getEventDate())
-                        .currency(request.currency() != null ? request.currency() : event.getCurrency())
-                        .notes(request.notes() != null ? request.notes() : event.getNotes())
+                        .userId(eventCategory.getUserId())
+                        .name(request.name() != null ? request.name() : eventCategory.getName())
+                        .description(request.description() != null ? request.description() : eventCategory.getDescription())
                         .build();
-                var savedEvent = repo.save(updatedEvent);
-                return mapper.apply(savedEvent);
+                var savedEventCategory = repo.save(updatedEventCategory);
+                return mapper.apply(savedEventCategory);
             }
             else throw new ApiException(USER_FETCHING_ERROR);
         }
         catch (Exception ex){
-            throw new ApiException(UPDATE_FETCHING_ERROR + "Event");
+            throw new ApiException(UPDATE_FETCHING_ERROR + "Event Category");
         }
         finally {
             RequestContext.start();
@@ -132,17 +120,12 @@ public class EventCategoryService implements IEventCategoryService {
     }
 
     @Override
-    public void deleteEvent(String id) {
+    public void deleteEventCategory(String id) {
         log.info("deleting event");
-        var guest = repo.findById(id).orElse(null);
-        if (guest == null) throw new RequestValidationException(REQUEST_VALIDATION_ERROR + id);
+        var category = repo.findById(id).orElse(null);
+        if (category == null) throw new RequestValidationException(REQUEST_VALIDATION_ERROR + id);
         repo.deleteById(id);
     }
 
-    @Override
-    public EventSharedResponseDTO listSharedUsersByEventId(String id) {
-        var event = repo.findById(id).orElseThrow(() -> new RequestValidationException(REQUEST_VALIDATION_ERROR + id));
-        return mapperShared.apply(event);
-    }
 
 }
