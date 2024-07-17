@@ -12,9 +12,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class BookingDetail extends Auditable{
-    private Long bookingDetailId;
     @ManyToOne
-    private Bookings booking;
+    private Booking booking;
     private String item;
     private String  venue;
     private int quantity; // For items, e.g., number of chairs
