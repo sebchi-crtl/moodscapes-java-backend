@@ -1,12 +1,14 @@
 package com.moodscapes.backend.moodscapes.backend.dto.request;
 
+import java.util.List;
+
 public record BookingDetailRequestDTO(
-        String title,
-        String author,
-        boolean available
-) {
-    public static BookingDetailRequestDTO of(String title, String author, boolean available) {
-        return null;
-    }
-}
+        String itemId,
+        String itemName,
+        String vendorName,
+        String imageUrl,
+        Integer quantity,
+        Double unitPrice,
+        Double totalCost
+) {}
 

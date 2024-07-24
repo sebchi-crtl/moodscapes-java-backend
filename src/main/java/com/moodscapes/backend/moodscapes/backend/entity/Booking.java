@@ -1,5 +1,6 @@
 package com.moodscapes.backend.moodscapes.backend.entity;
 
+import com.moodscapes.backend.moodscapes.backend.enumeration.BookingItemType;
 import com.moodscapes.backend.moodscapes.backend.enumeration.BookingStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -23,10 +24,15 @@ public class Booking extends Auditable {
     private String userId;
     @NotNull
     private String recipientUserId;
+    @ManyToOne
+    @JoinColumn(name = "eventId")
+    private Event event;
+    private String plannerName;
     @ElementCollection(fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
     private BookingStatus confirm;
+    @Enumerated(EnumType.STRING)
+    private BookingItemType itemType;
     @OneToMany(mappedBy = "booking", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<BookingDetail> details;
-    private LocalDate eventDate;
 }

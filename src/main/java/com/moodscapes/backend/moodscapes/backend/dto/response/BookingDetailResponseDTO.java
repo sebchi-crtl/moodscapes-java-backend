@@ -4,11 +4,12 @@ import java.time.LocalDateTime;
 
 public record BookingDetailResponseDTO(
         String id,
-        String userId,
-        String title,
-        String location,
-        boolean available,
-        String note,
-        LocalDateTime createdAt
+        String itemId,
+        String itemName,
+        String vendorName,
+        Integer quantity,
+        String imageUrl,
+        Double unitPrice,
+        Double totalCost
 ) {
 }
