@@ -46,6 +46,7 @@ public class UserUtils {
                 .authorities(user.getRole().stream().map(role -> new SimpleGrantedAuthority(role.name())).toList().toString())
                 .enabled(user.isEnabled())
                 .build();
+        //commenting
     }
 
     public static UserPrincipal fromUserPrincipal(User user, Role role, Credential userCredentialById) {
