@@ -56,7 +56,6 @@ public abstract class AuthService implements IAuthService {
     public void signInWithMagicLink(String token, HttpServletRequest request) {
         try {
             System.out.println("did the token come in here? " + token);
-
             authenticate(token);
         }
         catch(Exception ex){

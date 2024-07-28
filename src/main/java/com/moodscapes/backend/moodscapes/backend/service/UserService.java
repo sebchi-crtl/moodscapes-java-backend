@@ -33,6 +33,7 @@ public class UserService implements IUserService {
     private final CredentialRepo credentialRepo;
     private final ApplicationEventPublisher publisher;
     private final NewUserCheckRepo newUserCheckRepo;
+    private final MagicService magicService;
     private final RoleConverter roleConverter;
 
     @Override
@@ -40,17 +41,19 @@ public class UserService implements IUserService {
         try{
             String email = request.email();
             if (!getUserByEmail(email)){
-//                if (findNewUserByEmail(email).isNewUser()){
+                if (findNewUserByEmail(email).isNewUser()){
                     var user = userRepo.save(createNewUser(email, request.fullName(), request.role()));
                     String password = shuffleString(email);
                     var credential = new Credential(user, password);
                     credentialRepo.save(credential);
                     publisher.publishEvent(new UserEvent( this, user, true));
+                    newUserCheckRepo.deleteByEmail(email);
                     //TODO: SIGN-IN METHOD
-//                }
-//                else {
-//                    throw new ApiException("you are not allowed to create a user");
-//                }
+                    magicService.signingInUser(email);
+                }
+                else {
+                    throw new ApiException("you are not allowed to create a user");
+                }
 
             }
             else throw new ApiException("User Already exists");

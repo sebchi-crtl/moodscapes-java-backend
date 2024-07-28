@@ -2,9 +2,7 @@ package com.moodscapes.backend.moodscapes.backend.service;
 
 import com.moodscapes.backend.moodscapes.backend.domain.RequestContext;
 import com.moodscapes.backend.moodscapes.backend.dto.request.BookingRequestDTO;
-import com.moodscapes.backend.moodscapes.backend.dto.request.QuoteRequestDTO;
 import com.moodscapes.backend.moodscapes.backend.dto.response.BookingResponseDTO;
-import com.moodscapes.backend.moodscapes.backend.dto.response.QuoteResponseDTO;
 import com.moodscapes.backend.moodscapes.backend.entity.*;
 import com.moodscapes.backend.moodscapes.backend.enumeration.BookingStatus;
 import com.moodscapes.backend.moodscapes.backend.exception.ApiException;
@@ -40,8 +38,8 @@ public class BookingService implements IBookingService {
     @Autowired
     private IEventService eventService;
 
-    private QuoteItem findQuoteItemByVendorItemInfo(List<QuoteItem> items, String vendorItemInfo) {
-        return items.stream().filter(item -> item.getVendorItemInfo().equals(vendorItemInfo)).findFirst().orElse(null);
+    private BookingDetail findBookingDetailByBookingItemInfo(List<BookingDetail> items, String itemId) {
+        return items.stream().filter(item -> item.getItemName().equals(itemId)).findFirst().orElse(null);
     }
 
     @Override
@@ -136,7 +134,59 @@ public class BookingService implements IBookingService {
     }
 
     @Override
-    public BookingResponseDTO updateBooking(String bookingId, BookingRequestDTO bookingRequest) {
-        return null;
+    public BookingResponseDTO updateBooking(String id, BookingRequestDTO bookingRequest) {
+        try{
+            log.info("updating booking: " + bookingRequest);
+            RequestContext.setUserId(bookingRequest.userId());
+
+            var existingBooking = bookRepository.findById(id).orElseThrow(() -> new RuntimeException(REQUEST_VALIDATION_ERROR + id));
+            existingBooking.setUserId(existingBooking.getUserId());
+            existingBooking.setRecipientUserId(existingBooking.getRecipientUserId());
+            existingBooking.setEvent(existingBooking.getEvent());
+            existingBooking.setPlannerName(bookingRequest.plannerName());
+            existingBooking.setConfirm(bookingRequest.confirm());
+            existingBooking.setItemType(bookingRequest.itemType());
+
+            // Update or add new QuoteItems
+            List<BookingDetail> updatedDetails = bookingRequest.details().stream().map(itemRequest -> {
+                BookingDetail bookingDetail = findBookingDetailByBookingItemInfo(existingBooking.getDetails(), itemRequest.itemId());
+                if (bookingDetail == null) {
+                    bookingDetail = BookingDetail.builder()
+                            .itemId(itemRequest.itemId())
+                            .itemName(itemRequest.itemName())
+                            .vendorName(itemRequest.itemName())
+                            .imageUrl(itemRequest.imageUrl())
+                            .quantity(itemRequest.quantity())
+                            .unitPrice(itemRequest.unitPrice())
+                            .totalCost(itemRequest.quantity() * itemRequest.unitPrice())
+                            .booking(existingBooking)
+                            .build();
+                } else {
+                    bookingDetail.setQuantity(itemRequest.quantity());
+                    bookingDetail.setUnitPrice(itemRequest.unitPrice());
+                    bookingDetail.setTotalCost(itemRequest.quantity() * itemRequest.unitPrice());
+                }
+                return bookingDetail;
+            }).collect(Collectors.toList());
+
+            // Remove BookingDetails that are no longer in the request
+            existingBooking.getDetails().removeIf(item ->
+                    updatedDetails.stream().noneMatch(updatedItem -> updatedItem.getItemId().equals(item.getItemId()))
+            );
+
+            // Update total cost
+            existingBooking.setDetails(updatedDetails);
+            existingBooking.setTotalCost(updatedDetails.stream().mapToDouble(BookingDetail::getTotalCost).sum());
+
+            Booking updatedBooked = bookRepository.save(existingBooking);
+            bookingDetailsRepository.saveAll(updatedDetails); // Ensure updated items are saved
+            return  mapper.apply(updatedBooked);
+        }
+        catch (Exception ex){
+            throw new ApiException(UPDATE_FETCHING_ERROR + "Guests");
+        }
+        finally {
+            RequestContext.start();
+        }
     }
 }

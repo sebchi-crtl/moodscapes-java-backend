@@ -7,4 +7,6 @@ import java.util.Optional;
 
 public interface NewUserCheckRepo extends JpaRepository<NewUserCheck, String> {
     Optional<NewUserCheck> findByEmail(String email);
+
+    void deleteByEmail(String email);
 }

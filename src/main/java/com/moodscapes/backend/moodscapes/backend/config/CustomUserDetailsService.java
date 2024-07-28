@@ -7,6 +7,7 @@ import com.moodscapes.backend.moodscapes.backend.entity.User;
 import com.moodscapes.backend.moodscapes.backend.security.SecurityUtils;
 import com.moodscapes.backend.moodscapes.backend.service.UserService;
 import com.moodscapes.backend.moodscapes.backend.service.interfaces.IUserService;
+import com.moodscapes.backend.moodscapes.backend.util.UserUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
@@ -39,6 +40,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         Credential credential = new Credential();
         UserPrincipal userPrincipal = new UserPrincipal();
+//        return new UserAuthPrincipal(userPrincipal, credential);
         return mapUserToUserPrincipal(userPrincipal, credential);
 //        return null;
     }

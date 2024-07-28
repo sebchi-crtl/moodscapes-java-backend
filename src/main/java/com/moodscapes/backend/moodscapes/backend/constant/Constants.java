@@ -21,5 +21,6 @@ public class Constants {
     public static final String EVENT = "event";
     public static final String CLIENT = "client";
     public static final String QUOTES = "quote";
+    public static final String BOOKINGS = "booking";
     public static final String UNABLE_FETCH = "unable to fetch any data at the moment";
 }

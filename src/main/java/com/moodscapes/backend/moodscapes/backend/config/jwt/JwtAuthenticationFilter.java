@@ -8,9 +8,14 @@ import com.moodscapes.backend.moodscapes.backend.enumeration.TokenType;
 import com.moodscapes.backend.moodscapes.backend.service.interfaces.IUserService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -35,8 +40,10 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @Slf4j
 public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
 
-    private final IUserService userService;
-    private final IJwtProvider jwtProvider;
+    @Autowired
+    private IUserService userService;
+    @Autowired
+    private IJwtProvider jwtProvider;
     public JwtAuthenticationFilter(AuthenticationManager manager, IUserService userService, IJwtProvider jwtProvider) {
         super(new AntPathRequestMatcher(LOGIN_PATH), manager);
         this.userService = userService;
@@ -84,6 +91,10 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
         mapper.writeValue(out, httpResponse);
         out.flush();
     }
+//    @Override
+//    protected  void doFilter(ServletRequest request, ServletResponse response, FilterChain chain){
+//
+//    }
 
     private HttpResponse sendResponse(HttpServletRequest request, HttpServletResponse response, UserPrincipal user) {
         jwtProvider.addCookie(response, user, ACCESS);

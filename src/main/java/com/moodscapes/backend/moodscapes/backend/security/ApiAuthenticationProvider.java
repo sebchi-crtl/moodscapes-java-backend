@@ -1,5 +1,6 @@
 package com.moodscapes.backend.moodscapes.backend.security;
 
+import com.moodscapes.backend.moodscapes.backend.config.CustomUserDetailsService;
 import com.moodscapes.backend.moodscapes.backend.domain.ApiAuthentication;
 import com.moodscapes.backend.moodscapes.backend.domain.UserAuthPrincipal;
 import com.moodscapes.backend.moodscapes.backend.exception.ApiException;
@@ -16,7 +17,7 @@ import java.util.function.Function;
 
 @RequiredArgsConstructor
 public class ApiAuthenticationProvider implements AuthenticationProvider {
-    private final UserDetailsService userDetailsService;
+    private final CustomUserDetailsService userDetailsService;
     private final IUserService userService;
     private final BCryptPasswordEncoder encoder;
 
@@ -33,7 +34,7 @@ public class ApiAuthenticationProvider implements AuthenticationProvider {
             else throw new BadCredentialsException("unable to authenticate");
         }
         else
-            throw new ApiException("Unable to authenticate");
+            throw new ApiException("Unable to authenticate this time");
     }
     private final Function<Authentication, ApiAuthentication> authenticationFunction = authentication -> (ApiAuthentication) authentication;
     @Override

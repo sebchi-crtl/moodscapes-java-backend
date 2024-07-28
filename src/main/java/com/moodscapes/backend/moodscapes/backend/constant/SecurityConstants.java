@@ -8,7 +8,7 @@ public class SecurityConstants {
     public static final String EMPTY_VALUE = "empty";
     public static final String JWT_TYPE = "JWT";
     public static final String TYPE = "typ";
-    public static final String GET_ARRAYS_LLC = "GET_ARRAYS_LLC";
+    public static final String GET_MOODSCAPES_LLC = "GET_MOODSCAPES_LLC";
     public static final String AUTHORITIES = "authorities";
     public static final String AUTHORITY_DELIMITER = ",";
     public static final String ROLE_SUPAADMIN = "SUPAADMIN";

@@ -1,5 +1,7 @@
 package com.moodscapes.backend.moodscapes.backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.moodscapes.backend.moodscapes.backend.enumeration.BookingItemType;
 import com.moodscapes.backend.moodscapes.backend.enumeration.BookingStatus;
 import jakarta.persistence.*;
@@ -9,9 +11,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Data
@@ -26,11 +26,14 @@ public class Booking extends Auditable {
     private String recipientUserId;
     @ManyToOne
     @JoinColumn(name = "eventId")
+    @JsonIdentityReference(alwaysAsId = true)
+    @JsonProperty("id")
     private Event event;
     private String plannerName;
     @ElementCollection(fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
     private BookingStatus confirm;
+    private Double totalCost;
     @Enumerated(EnumType.STRING)
     private BookingItemType itemType;
     @OneToMany(mappedBy = "booking", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

@@ -1,12 +1,13 @@
 package com.moodscapes.backend.moodscapes.backend.config;
 
-import com.moodscapes.backend.moodscapes.backend.constant.SecurityConstants;
-import jakarta.servlet.http.HttpServletResponse;
+import com.moodscapes.backend.moodscapes.backend.config.jwt.IJwtProvider;
+import com.moodscapes.backend.moodscapes.backend.config.jwt.JwtAuthenticationFilter;
+import com.moodscapes.backend.moodscapes.backend.config.jwt.JwtAuthorizationFilter;
+import com.moodscapes.backend.moodscapes.backend.service.interfaces.IUserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -16,12 +17,9 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import static com.moodscapes.backend.moodscapes.backend.constant.SecurityConstants.*;
-import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
 @EnableWebSecurity
@@ -31,9 +29,12 @@ import static org.springframework.security.config.Customizer.withDefaults;
         prePostEnabled = true
 )
 @Slf4j
+@RequiredArgsConstructor
 public class SecurityConfig {
 
-//    private final CustomUserDetailsService userDetailsService;
+    private final CustomUserDetailsService userDetailsService;
+    private final IJwtProvider jwtProvider;
+    private final IUserService userService;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -46,6 +47,8 @@ public class SecurityConfig {
     }
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        var authenticationFilter = new JwtAuthenticationFilter(authenticationManager(new AuthenticationConfiguration()), userService, jwtProvider);
+        var authorizationFilter = new JwtAuthorizationFilter(authenticationManager(new AuthenticationConfiguration()), jwtProvider, userDetailsService);
         http
                 .cors(cors -> cors.disable())
                 .csrf(csrf -> csrf.disable())
@@ -66,8 +69,12 @@ public class SecurityConfig {
                 .sessionManagement(
                         (session) -> session
                                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                );
-//                .oauth2Login(oauth2Login ->
+                )
+                .addFilter(authenticationFilter)
+                .addFilterBefore(authorizationFilter, UsernamePasswordAuthenticationFilter.class);
+        return http.build();
+    }
+//       .oauth2Login(oauth2Login ->
 //                        oauth2Login
 //                                .userInfoEndpoint(
 //                                        userInfoEndpointConfig -> userInfoEndpointConfig
@@ -84,7 +91,4 @@ public class SecurityConfig {
 //                        exceptionHandlingConfigurer -> exceptionHandlingConfigurer
 //                                .authenticationEntryPoint(new HttpStatusEntryPoint(UNAUTHORIZED))
 //                )
-//                .addFilterBefore(jwtAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
-        return http.build();
-    }
 }

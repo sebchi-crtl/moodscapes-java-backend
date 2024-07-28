@@ -27,7 +27,6 @@ public class Credential extends Auditable {
     @JsonIdentityReference(alwaysAsId = true)
     @JsonProperty("id")
     private User userAuth;
-
     public Credential(User userAuth, String password) {
         this.userAuth = userAuth;
         this.password = password;

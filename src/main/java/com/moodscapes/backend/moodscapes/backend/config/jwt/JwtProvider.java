@@ -47,6 +47,7 @@ public class JwtProvider implements IJwtProvider{
         return null; // Use the getter method from Lombok
     }
     private final Function<String, Claims> claimsFunction = token ->
+
             Jwts
                     .parser()
                     .verifyWith(key.get())
@@ -74,7 +75,7 @@ public class JwtProvider implements IJwtProvider{
             Jwts.builder()
                     .header().add(Map.of(TYPE, JWT_TYPE))
                     .and()
-                    .audience().add(GET_ARRAYS_LLC)
+                    .audience().add(GET_MOODSCAPES_LLC)
                     .and()
                     .id(UUID.randomUUID().toString())
                     .issuedAt(from(now()))

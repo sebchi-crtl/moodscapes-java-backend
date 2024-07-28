@@ -10,7 +10,7 @@ public record BookingRequestDTO(
         String recipientUserId,
         String eventId,
         String plannerName,
-        BookingStatus status,
+        BookingStatus confirm,
         BookingItemType itemType,
         List<BookingDetailRequestDTO> details
 ) {}
