@@ -8,12 +8,23 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.io.Serial;
 import java.util.Collection;
 
 @RequiredArgsConstructor
 @Data
 @Builder
-public record UserAuthPrincipal(UserPrincipal user, Credential credential) implements UserDetails {
+public final class UserAuthPrincipal implements UserDetails {
+    @Serial
+    private static final long serialVersionUID = 0L;
+    private final UserPrincipal user;
+    private final Credential credential;
+
+//    public UserAuthPrincipal(UserPrincipal user, Credential credential) {
+//        this.user = user;
+//        this.credential = credential;
+//    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Role.valueOf(user.getRole().toString()).getAuthorities();
@@ -48,4 +59,13 @@ public record UserAuthPrincipal(UserPrincipal user, Credential credential) imple
     public boolean isEnabled() {
         return user.isEnabled();
     }
+
+    public UserPrincipal user() {
+        return user;
+    }
+
+    public Credential credential() {
+        return credential;
+    }
+
 }

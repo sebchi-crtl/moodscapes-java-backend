@@ -22,6 +22,7 @@ import java.util.List;
 //@Service
 @Slf4j
 @RequiredArgsConstructor
+@Service
 public class CustomUserDetailsService implements UserDetailsService {
     private final IUserService userService;
 

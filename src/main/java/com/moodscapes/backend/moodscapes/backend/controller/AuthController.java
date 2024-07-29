@@ -1,27 +1,19 @@
 package com.moodscapes.backend.moodscapes.backend.controller;
 
 import com.moodscapes.backend.moodscapes.backend.dto.request.AuthRequestDTO;
-import com.moodscapes.backend.moodscapes.backend.dto.request.UserRequestDTO;
 import com.moodscapes.backend.moodscapes.backend.dto.response.HttpResponse;
 import com.moodscapes.backend.moodscapes.backend.exception.ApiException;
 import com.moodscapes.backend.moodscapes.backend.service.interfaces.IAuthService;
 import com.moodscapes.backend.moodscapes.backend.service.interfaces.IUserService;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpRequest;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.URI;
-import java.time.LocalDateTime;
 import java.util.Map;
 
 import static com.moodscapes.backend.moodscapes.backend.util.RequestUtils.getResponse;
-import static java.util.Collections.emptyMap;
-import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
 @RestController

@@ -30,7 +30,6 @@ public class Booking extends Auditable {
     @JsonProperty("id")
     private Event event;
     private String plannerName;
-    @ElementCollection(fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
     private BookingStatus confirm;
     private Double totalCost;

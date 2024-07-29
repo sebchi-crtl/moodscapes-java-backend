@@ -9,6 +9,7 @@ import com.moodscapes.backend.moodscapes.backend.service.interfaces.IBookingServ
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +27,7 @@ import static org.springframework.http.HttpStatus.OK;
 @RestController
 @Slf4j
 @RequestMapping("/bookings")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class BookingController {
 
     private final IBookingService bookingService;

@@ -18,6 +18,6 @@ public interface IEventService {
     EventResponseDTO updateEvent(String id, EventRequestDTO updatedEvent);
     String deleteEvent(String id);
     EventSharedResponseDTO listSharedUsersByEventId(String id);
-    List<EventResponseDTO> listEventsByEventCategoryId(String category);
+//    List<EventResponseDTO> listEventsByEventCategoryId(String category);
     EventSharedResponseDTO addSharedUser(String eventId, String userId, String sharedUserId);
 }

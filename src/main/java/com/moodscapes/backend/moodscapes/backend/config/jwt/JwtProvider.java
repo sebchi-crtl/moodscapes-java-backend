@@ -14,7 +14,6 @@ import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
@@ -36,12 +35,18 @@ import static org.springframework.boot.web.server.Cookie.SameSite.NONE;
 import static org.springframework.security.core.authority.AuthorityUtils.commaSeparatedStringToAuthorityList;
 
 @Service
-@RequiredArgsConstructor
 @Slf4j
 public class JwtProvider implements IJwtProvider{
     private final IUserService userService;
-    private final JwtConfig jwtConfig;
+    private JwtConfig jwtConfig;
+
+    public JwtProvider(IUserService userService, JwtConfig jwtConfig) {
+        this.userService = userService;
+        this.jwtConfig = jwtConfig;
+    }
     private final Supplier<SecretKey> key = () -> Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtConfig.getSecret()));
+
+
 
     public String getSecretFromConfig() {
         return null; // Use the getter method from Lombok

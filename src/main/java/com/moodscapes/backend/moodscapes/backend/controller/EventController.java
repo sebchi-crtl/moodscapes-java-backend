@@ -87,7 +87,7 @@ public class EventController {
         }
     }
     @GetMapping
-    public  ResponseEntity<HttpResponse> getAllGuests(HttpServletRequest request, HttpServletResponse response) {
+    public  ResponseEntity<HttpResponse> getAllEvents(HttpServletRequest request, HttpServletResponse response) {
         try{
             var allEvents = eventService.getAllEvents();
             if (!allEvents.isEmpty()){
@@ -112,7 +112,7 @@ public class EventController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<HttpResponse> getGuestById(@PathVariable String id, HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<HttpResponse> getEventById(@PathVariable String id, HttpServletRequest request, HttpServletResponse response) {
         try {
             var event = eventService.getEventById(id);
             if (event != null)

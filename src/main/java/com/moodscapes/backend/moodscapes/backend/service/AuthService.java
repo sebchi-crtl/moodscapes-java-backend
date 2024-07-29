@@ -1,15 +1,12 @@
 package com.moodscapes.backend.moodscapes.backend.service;
 
-import com.moodscapes.backend.moodscapes.backend.dto.request.UserRequestDTO;
 import com.moodscapes.backend.moodscapes.backend.entity.Auth;
 import com.moodscapes.backend.moodscapes.backend.exception.ApiException;
 import com.moodscapes.backend.moodscapes.backend.service.interfaces.IAuthService;
-import com.moodscapes.backend.moodscapes.backend.service.interfaces.IUserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpRequest;
 
 import java.security.SecureRandom;
 import java.util.List;

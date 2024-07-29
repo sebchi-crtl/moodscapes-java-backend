@@ -5,21 +5,27 @@ import com.moodscapes.backend.moodscapes.backend.domain.ApiAuthentication;
 import com.moodscapes.backend.moodscapes.backend.domain.UserAuthPrincipal;
 import com.moodscapes.backend.moodscapes.backend.exception.ApiException;
 import com.moodscapes.backend.moodscapes.backend.service.interfaces.IUserService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
 
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-@RequiredArgsConstructor
+//@RequiredArgsConstructor
+@Component
 public class ApiAuthenticationProvider implements AuthenticationProvider {
     private final CustomUserDetailsService userDetailsService;
     private final IUserService userService;
-    private final BCryptPasswordEncoder encoder;
+    private final PasswordEncoder encoder;
+
+    public ApiAuthenticationProvider(CustomUserDetailsService userDetailsService, IUserService userService, PasswordEncoder encoder) {
+        this.userDetailsService = userDetailsService;
+        this.userService = userService;
+        this.encoder = encoder;
+    }
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {

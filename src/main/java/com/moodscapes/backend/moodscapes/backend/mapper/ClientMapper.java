@@ -16,8 +16,8 @@ public class ClientMapper implements Function<Client, ClientResponseDTO> {
     public ClientResponseDTO apply(Client client) {
         return new ClientResponseDTO(
                 client.getId(),
-                client.getEventID(),
-                client.getUserID(),
+                client.getEventId(),
+                client.getUserId(),
                 client.getFirstName(),
                 client.getLastName(),
                 client.getCountry(),

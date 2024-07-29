@@ -27,7 +27,7 @@ import static java.util.Collections.emptyList;
 @Slf4j
 public class EventService implements IEventService {
 
-    private final EventRepo repo;
+    private final EventRepo repository;
     private final UserService userService;
     private final EventMapper mapper;
     private final EventSharedMapper mapperShared;
@@ -35,14 +35,22 @@ public class EventService implements IEventService {
     @Override
     public List<EventResponseDTO> getAllEvents() {
         log.info("fetching all events");
-        return repo.findAll().stream().map(mapper).collect(Collectors.toList());
+        return repository.findAll().stream().map(mapper).collect(Collectors.toList());
     }
-
+//    @Override
+//    public List<EventResponseDTO> listEventsByEventCategoryId(String category) {
+//        var eventDTOs = repository
+//                .findByEventCategory(category)
+//                .stream()
+//                .map(mapper)
+//                .collect(Collectors.toList());
+//        return eventDTOs;
+//    }
     @Override
     public List<EventResponseDTO> getAllEventsByUserId(String userId) {
         log.info("fetching all events by user's id");
         try {
-            return repo.findByUserId(userId).stream().toList();
+            return repository.findByUserId(userId).stream().toList();
         }
         catch (Exception ex){
             throw new ApiException(UNABLE_FETCH);
@@ -51,13 +59,13 @@ public class EventService implements IEventService {
 
     @Override
     public EventResponseDTO getEventById(String id) {
-        var event = repo.findById(id).orElseThrow(() -> new RequestValidationException(REQUEST_VALIDATION_ERROR + id));
+        var event = repository.findById(id).orElseThrow(() -> new RequestValidationException(REQUEST_VALIDATION_ERROR + id));
         return mapper.apply(event);
     }
 
     @Override
     public boolean checkIfEventIdExists(String id) {
-        return repo.existsById(id);
+        return repository.existsById(id);
     }
 
     @Override
@@ -79,7 +87,7 @@ public class EventService implements IEventService {
                         .sharedUserId(emptyList())
                         .build();
                 log.info("Saving event: {}", build);
-                var savedEvent = repo.save(build);
+                var savedEvent = repository.save(build);
                 log.info("Event saved successfully: {}", savedEvent);
                 return mapper.apply(savedEvent);
             }
@@ -102,7 +110,7 @@ public class EventService implements IEventService {
     public EventResponseDTO updateEvent(String id, EventRequestDTO request) {
         try {
             log.info("updating event: " + request);
-            var event = repo.findById(id)
+            var event = repository.findById(id)
                     .orElseThrow(() -> new RequestValidationException(REQUEST_VALIDATION_ERROR + id));
             var userId = userService.getUserById(event.getUserId());
             RequestContext.setUserId(request.userId());
@@ -117,7 +125,7 @@ public class EventService implements IEventService {
                         .currency(request.currency() != null ? request.currency() : event.getCurrency())
                         .notes(request.notes() != null ? request.notes() : event.getNotes())
                         .build();
-                var savedEvent = repo.save(updatedEvent);
+                var savedEvent = repository.save(updatedEvent);
                 return mapper.apply(savedEvent);
             }
             else throw new ApiException(USER_FETCHING_ERROR);
@@ -133,15 +141,15 @@ public class EventService implements IEventService {
     @Override
     public String deleteEvent(String id) {
         log.info("deleting event");
-        var guest = repo.findById(id).orElse(null);
+        var guest = repository.findById(id).orElse(null);
         if (guest == null) throw new RequestValidationException(REQUEST_VALIDATION_ERROR + id);
-        repo.deleteById(id);
+        repository.deleteById(id);
         return "success";
     }
 
     @Override
     public EventSharedResponseDTO listSharedUsersByEventId(String id) {
-        var event = repo.findById(id).orElseThrow(() -> new RequestValidationException(REQUEST_VALIDATION_ERROR + id));
+        var event = repository.findById(id).orElseThrow(() -> new RequestValidationException(REQUEST_VALIDATION_ERROR + id));
         return mapperShared.apply(event);
     }
 
@@ -150,10 +158,10 @@ public class EventService implements IEventService {
         try {
             log.info("sending shared users to event: " + sharedUserId);
             RequestContext.setUserId(userId);
-            var event = repo.findById(eventId).orElseThrow(() -> new RequestValidationException(REQUEST_VALIDATION_ERROR + eventId));
+            var event = repository.findById(eventId).orElseThrow(() -> new RequestValidationException(REQUEST_VALIDATION_ERROR + eventId));
             if (!event.getSharedUserId().contains(sharedUserId)) {
                 event.getSharedUserId().add(sharedUserId);
-                repo.save(event);
+                repository.save(event);
             }
             return mapperShared.apply(event);
         }
@@ -163,15 +171,5 @@ public class EventService implements IEventService {
         finally {
             RequestContext.start();
         }
-    }
-
-    @Override
-    public List<EventResponseDTO> listEventsByEventCategoryId(String category) {
-        var eventDTOs = repo.findByEventCategory(category)
-                .stream()
-                .toList();
-//                .map(mapper) // Example mapping
-//                .collect(Collectors.toList());
-        return eventDTOs;
     }
 }

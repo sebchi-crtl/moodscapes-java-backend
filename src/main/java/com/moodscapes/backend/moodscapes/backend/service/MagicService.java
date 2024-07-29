@@ -1,10 +1,10 @@
 package com.moodscapes.backend.moodscapes.backend.service;
 
 import com.moodscapes.backend.moodscapes.backend.config.CustomUserDetailsService;
+import com.moodscapes.backend.moodscapes.backend.entity.Auth;
 import com.moodscapes.backend.moodscapes.backend.entity.NewUserCheck;
 import com.moodscapes.backend.moodscapes.backend.exception.ApiException;
 import com.moodscapes.backend.moodscapes.backend.repository.AuthRepo;
-import com.moodscapes.backend.moodscapes.backend.entity.Auth;
 import com.moodscapes.backend.moodscapes.backend.repository.NewUserCheckRepo;
 import com.moodscapes.backend.moodscapes.backend.security.ApiAuthenticationProvider;
 import com.moodscapes.backend.moodscapes.backend.service.interfaces.IEmailService;
@@ -32,7 +32,7 @@ public class MagicService extends AuthService implements IMagicService{
     private final NewUserCheckRepo newUserCheckRepo;
     private final CustomUserDetailsService userDetailsService;
     private final ApiAuthenticationProvider authenticationProvider;
-    private final Authentication authentication;
+    private final AuthenticationManager authenticationManager;
 
     @Override
     public String token() {
@@ -85,7 +85,12 @@ public class MagicService extends AuthService implements IMagicService{
             System.out.println("did it confirm to get email? " + confirmToken.getEmail());
             String email = confirmToken.getEmail();
             var user = userService.getaUserByEmail(email);
-            if (user.isPresent()) signingInUser(email);
+            var userM = userService.findUserByEmail(email);
+            if (user.isPresent()) {
+                String id = userM.getId();
+                var credential = userService.getUserCredentialById(id);
+                signingInUser(email, credential.getPassword());
+            }
             log.info("checking if ");
             var existingCheck = newUserCheckRepo.findByEmail(email);
             if (existingCheck == null) {
@@ -103,15 +108,17 @@ public class MagicService extends AuthService implements IMagicService{
         }
     }
 
-    protected void signingInUser(String email) {
+    protected void signingInUser(String email, String password) {
+        log.info("authenticating user: {}", email);
+//        authenticationProvider.authenticate(authentication);
 
-        log.info("authenticating user");
-        authenticationProvider.authenticate(authentication);
-        log.info("Checking " + authenticationProvider.authenticate(authentication));
-        log.info("signing in user");
-        var user =  userDetailsService.loadUserByUsername(email);
-        var username = user.getUsername();
-        log.info("This is the load userDetailsService {} "+username);
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(email, password));
+        log.info("User authenticated: {}", authentication.isAuthenticated());
+//        log.info("signing in user");
+//        var user =  userDetailsService.loadUserByUsername(email);
+//        var username = user.getUsername();
+//        log.info("This is the load userDetailsService {} "+username);
 
     }
 

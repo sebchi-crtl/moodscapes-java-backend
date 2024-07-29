@@ -12,5 +12,5 @@ import java.util.List;
 public interface EventRepo extends JpaRepository<Event, String> {
     List<EventResponseDTO> findByUserId(String userId);
 
-    List<EventResponseDTO> findByEventCategory(String category);
+//    List<Event> findByEventCategory(String category);
 }

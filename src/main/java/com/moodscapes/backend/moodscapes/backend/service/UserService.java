@@ -33,7 +33,7 @@ public class UserService implements IUserService {
     private final CredentialRepo credentialRepo;
     private final ApplicationEventPublisher publisher;
     private final NewUserCheckRepo newUserCheckRepo;
-    private final MagicService magicService;
+//    private final MagicService magicService;
     private final RoleConverter roleConverter;
 
     @Override
@@ -49,7 +49,7 @@ public class UserService implements IUserService {
                     publisher.publishEvent(new UserEvent( this, user, true));
                     newUserCheckRepo.deleteByEmail(email);
                     //TODO: SIGN-IN METHOD
-                    magicService.signingInUser(email);
+//                    magicService.signingInUser(email);
                 }
                 else {
                     throw new ApiException("you are not allowed to create a user");

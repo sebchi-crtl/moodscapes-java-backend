@@ -3,11 +3,10 @@ package com.moodscapes.backend.moodscapes.backend.domain;
 import com.moodscapes.backend.moodscapes.backend.exception.ApiException;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.AuthorityUtils;
 
 import java.util.Collection;
 
-import static org.springframework.security.core.authority.AuthorityUtils.*;
+import static org.springframework.security.core.authority.AuthorityUtils.NO_AUTHORITIES;
 
 public class ApiAuthentication extends AbstractAuthenticationToken {
     private static final String PASSWORD_PROTECTED = "[PASSWORD_PROTECTED]";

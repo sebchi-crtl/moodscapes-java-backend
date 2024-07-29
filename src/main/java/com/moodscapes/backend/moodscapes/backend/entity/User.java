@@ -30,6 +30,7 @@ public class User extends Auditable{
     private String fullName;
     private String bio;
     @ElementCollection
+    @Enumerated(EnumType.STRING)
     private Set<String> phoneNumber;
     private boolean enabled;
     private String imageUrl;

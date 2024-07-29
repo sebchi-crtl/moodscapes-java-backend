@@ -35,20 +35,20 @@ public class SecurityConfig {
     private final CustomUserDetailsService userDetailsService;
     private final IJwtProvider jwtProvider;
     private final IUserService userService;
+    private final AuthenticationConfiguration authenticationConfiguration;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder(getStrength());
     }
-
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
-        return config.getAuthenticationManager();
+    public AuthenticationManager authenticationManager() throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
     }
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        var authenticationFilter = new JwtAuthenticationFilter(authenticationManager(new AuthenticationConfiguration()), userService, jwtProvider);
-        var authorizationFilter = new JwtAuthorizationFilter(authenticationManager(new AuthenticationConfiguration()), jwtProvider, userDetailsService);
+        var authenticationFilter = new JwtAuthenticationFilter(authenticationManager(), userService, jwtProvider);
+        var authorizationFilter = new JwtAuthorizationFilter(authenticationManager(), jwtProvider, userDetailsService);
         http
                 .cors(cors -> cors.disable())
                 .csrf(csrf -> csrf.disable())
@@ -65,30 +65,12 @@ public class SecurityConfig {
                                 .anyRequest()
                                 .authenticated()
                 )
-                .logout(l -> l.logoutSuccessUrl("/").permitAll())
                 .sessionManagement(
                         (session) -> session
                                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
-                .addFilter(authenticationFilter)
+                .addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(authorizationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
-//       .oauth2Login(oauth2Login ->
-//                        oauth2Login
-//                                .userInfoEndpoint(
-//                                        userInfoEndpointConfig -> userInfoEndpointConfig
-//                                                .userService(customOAuth2UserService)
-//                                )
-//                                .successHandler(customAuthenticationSuccessHandler)
-//                )
-//                .logout(l -> l.logoutSuccessUrl("/").permitAll())
-//                .sessionManagement(
-//                        (session) -> session
-//                                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-//                )
-//                .exceptionHandling(
-//                        exceptionHandlingConfigurer -> exceptionHandlingConfigurer
-//                                .authenticationEntryPoint(new HttpStatusEntryPoint(UNAUTHORIZED))
-//                )
 }
