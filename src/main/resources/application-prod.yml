@@ -1,9 +1,12 @@
 #DATABASE
-POSTGRESQL_USERNAME: moodscapes
-POSTGRESQL_PASSWORD: admin
-POSTGRESQL_HOST: localhost
-POSTGRESQL_PORT: 5434
+POSTGRESQL_USERNAME: moodscapes_user
+POSTGRESQL_PASSWORD: INU8HXsP5792aDEz8cSTCv0ItzA9kUxW
+POSTGRESQL_HOST: dpg-cqp8rvdds78s73e6djo0-a
+POSTGRESQL_PORT: 5432
 POSTGRESQL_DATABASE: moodscapes
+POSTGRESQL_PSQL_COMMAND: PGPASSWORD=INU8HXsP5792aDEz8cSTCv0ItzA9kUxW psql -h dpg-cqp8rvdds78s73e6djo0-a.oregon-postgres.render.com -U moodscapes_user moodscapes
+POSTGRESQL_INTERNAL_URL: postgresql://moodscapes_user:INU8HXsP5792aDEz8cSTCv0ItzA9kUxW@dpg-cqp8rvdds78s73e6djo0-a/moodscapes
+POSTGRESQL_EXTERNAL_URL: postgresql://moodscapes_user:INU8HXsP5792aDEz8cSTCv0ItzA9kUxW@dpg-cqp8rvdds78s73e6djo0-a.oregon-postgres.render.com/moodscapes
 
 #SERVER
 CONTAINER_PORT: 8090
