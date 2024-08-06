@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,9 +30,27 @@ import static org.springframework.http.HttpStatus.OK;
 @RequestMapping("/bookings")
 @RequiredArgsConstructor
 public class BookingController {
-
     private final IBookingService bookingService;
 
+    @GetMapping("/details/user")
+    @PreAuthorize("hasRole('USER')")
+    public String userEnd() {
+        return "Event details";
+    }
+    @GetMapping("/admin")
+    @PreAuthorize("hasRole('ADMIN')")
+    public String adminEnd() {
+        return "you can view";
+    }
+    @GetMapping("/details")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
+    public String adminUserEnd() {
+        return "you can view";
+    }
+    @GetMapping("/public")
+    public String publicEnd() {
+        return "you can view this ";
+    }
     @PostMapping
     public ResponseEntity<HttpResponse> createBooking(@RequestBody BookingRequestDTO bookingRequest, HttpServletRequest request, HttpServletResponse response) {
         try {

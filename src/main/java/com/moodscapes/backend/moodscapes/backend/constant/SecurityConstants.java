@@ -3,7 +3,7 @@ package com.moodscapes.backend.moodscapes.backend.constant;
 public class SecurityConstants {
 
     public static final String ROLE_PREFIX = "ROLE_";
-    public static final String LOGIN_PATH = "/api/v1/login";
+    public static final String LOGIN_PATH = "/login";
     public static final String ROLE = "role";
     public static final String EMPTY_VALUE = "empty";
     public static final String JWT_TYPE = "JWT";
