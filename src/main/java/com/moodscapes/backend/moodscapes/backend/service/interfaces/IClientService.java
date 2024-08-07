@@ -12,6 +12,7 @@ public interface IClientService {
     ClientResponseDTO getClientById(String id);
 
     ClientResponseDTO addClient(ClientRequestDTO requestDTO);
+//    ClientResponseDTO addClientFromEvent(ClientRequestDTO requestDTO, String eventId);
 
     ClientResponseDTO updateClient(String id, ClientRequestDTO updatedClient);
 

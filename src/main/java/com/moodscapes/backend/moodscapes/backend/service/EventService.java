@@ -1,15 +1,21 @@
 package com.moodscapes.backend.moodscapes.backend.service;
 
 import com.moodscapes.backend.moodscapes.backend.domain.RequestContext;
+import com.moodscapes.backend.moodscapes.backend.dto.request.ClientRequestDTO;
 import com.moodscapes.backend.moodscapes.backend.dto.request.EventRequestDTO;
 import com.moodscapes.backend.moodscapes.backend.dto.response.EventResponseDTO;
 import com.moodscapes.backend.moodscapes.backend.dto.response.EventSharedResponseDTO;
+import com.moodscapes.backend.moodscapes.backend.entity.Client;
 import com.moodscapes.backend.moodscapes.backend.entity.Event;
+import com.moodscapes.backend.moodscapes.backend.entity.EventCategory;
 import com.moodscapes.backend.moodscapes.backend.exception.ApiException;
 import com.moodscapes.backend.moodscapes.backend.exception.RequestValidationException;
 import com.moodscapes.backend.moodscapes.backend.mapper.EventMapper;
 import com.moodscapes.backend.moodscapes.backend.mapper.EventSharedMapper;
+import com.moodscapes.backend.moodscapes.backend.repository.ClientRepo;
+import com.moodscapes.backend.moodscapes.backend.repository.EventCategoryRepo;
 import com.moodscapes.backend.moodscapes.backend.repository.EventRepo;
+import com.moodscapes.backend.moodscapes.backend.service.interfaces.IClientService;
 import com.moodscapes.backend.moodscapes.backend.service.interfaces.IEventService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +34,8 @@ import static java.util.Collections.emptyList;
 public class EventService implements IEventService {
 
     private final EventRepo repository;
+    private final EventCategoryRepo categoryRepository;
+    private final ClientRepo ClientRepository;
     private final UserService userService;
     private final EventMapper mapper;
     private final EventSharedMapper mapperShared;
@@ -73,13 +81,14 @@ public class EventService implements IEventService {
         try {
             log.info("creating event: " + request);
             var userId = userService.getUserById(request.userId());
+            EventCategory category = categoryRepository.findById(request.eventCategoryId()).orElseThrow(() -> new RuntimeException("Category not found"));
             if (userId) {
                 RequestContext.setUserId(request.userId());
                 var build = Event
                         .builder()
                         .userId(request.userId())
                         .title(request.title())
-                        .eventCategory(request.eventCategory())
+                        .eventCategory(category)
                         .location(request.location())
                         .eventDate(request.eventDate())
                         .currency(request.currency())
@@ -94,7 +103,61 @@ public class EventService implements IEventService {
             else throw new ApiException(USER_FETCHING_ERROR);
         }
         catch (DataIntegrityViolationException exm) {
-            log.error("Error adding guest due to data integrity violation: {}", exm.getMessage(), exm);
+            log.error("Error adding event due to data integrity violation: {}", exm.getMessage(), exm);
+            throw new ApiException("Failed to add event due to data integrity violation");
+        }
+        catch (Exception ex) {
+            log.error("Error adding event: {}", ex.getMessage(), ex);
+            throw new ApiException(ex.getMessage());
+        }
+        finally {
+            RequestContext.start();
+        }
+    }
+      @Override
+      public EventResponseDTO addEventClient(EventRequestDTO request, ClientRequestDTO requestDto) {
+        try {
+            log.info("creating event: " + request);
+            var userId = userService.getUserById(request.userId());
+            EventCategory category = categoryRepository.findById(request.eventCategoryId()).orElseThrow(() -> new RuntimeException("Category not found"));
+            if (userId) {
+                RequestContext.setUserId(request.userId());
+                var build = Event
+                        .builder()
+                        .userId(request.userId())
+                        .title(request.title())
+                        .eventCategory(category)
+                        .location(request.location())
+                        .eventDate(request.eventDate())
+                        .currency(request.currency())
+                        .notes(request.notes())
+                        .sharedUserId(emptyList())
+                        .build();
+                log.info("Saving event: {}", build);
+                var savedEvent = repository.saveAndFlush(build);
+                log.info("Event saved successfully: {}", savedEvent);
+                String eventId = savedEvent.getId();
+                var client = Client
+                        .builder()
+                        .eventId(eventId)
+                        .userId(requestDto.userId())
+                        .firstName(requestDto.firstName())
+                        .lastName(requestDto.lastName())
+                        .country(requestDto.country())
+                        .phoneNumber(requestDto.phoneNumber())
+                        .email(requestDto.email())
+                        .budget(requestDto.budget())
+                        .notes(requestDto.notes())
+                        .active(true)
+                        .build();
+                ClientRepository.save(client);
+                log.info("Client saved successfully: {}", savedEvent);
+                return mapper.apply(savedEvent);
+            }
+            else throw new ApiException(USER_FETCHING_ERROR);
+        }
+        catch (DataIntegrityViolationException exm) {
+            log.error("Error adding event due to data integrity violation: {}", exm.getMessage(), exm);
             throw new ApiException("Failed to add event due to data integrity violation");
         }
         catch (Exception ex) {
@@ -110,6 +173,7 @@ public class EventService implements IEventService {
     public EventResponseDTO updateEvent(String id, EventRequestDTO request) {
         try {
             log.info("updating event: " + request);
+            EventCategory category = categoryRepository.findById(request.eventCategoryId()).orElseThrow(() -> new RuntimeException("Category not found"));
             var event = repository.findById(id)
                     .orElseThrow(() -> new RequestValidationException(REQUEST_VALIDATION_ERROR + id));
             var userId = userService.getUserById(event.getUserId());
@@ -119,7 +183,7 @@ public class EventService implements IEventService {
                         .builder()
                         .userId(event.getUserId())
                         .title(request.title() != null ? request.title() : event.getTitle())
-                        .eventCategory(request.eventCategory() != null ? request.eventCategory() : event.getEventCategory())
+                        .eventCategory(category != null ? category : event.getEventCategory())
                         .location(request.location() != null ? request.location() : event.getLocation())
                         .eventDate(request.eventDate() != null ? request.eventDate() : event.getEventDate())
                         .currency(request.currency() != null ? request.currency() : event.getCurrency())

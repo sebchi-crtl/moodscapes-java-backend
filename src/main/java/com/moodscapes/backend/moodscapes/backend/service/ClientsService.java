@@ -95,17 +95,59 @@ public class ClientsService implements IClientService {
             else throw new ApiException(USER_FETCHING_ERROR);
         }
         catch (DataIntegrityViolationException ex) {
-            log.error("Error adding guest due to data integrity violation: {}", ex.getMessage(), ex);
+            log.error("Error adding client due to data integrity violation: {}", ex.getMessage(), ex);
             throw new ApiException("Failed to add guest due to data integrity violation");
         }
         catch (Exception ex) {
-            log.error("Error adding guest: {}", ex.getMessage(), ex);
+            log.error("Error adding client: {}", ex.getMessage(), ex);
             throw new ApiException(ex.getMessage());
         }
         finally {
             RequestContext.start();
         }
     }
+
+//    @Override
+//    public ClientResponseDTO addClientFromEvent(ClientRequestDTO requestDto, String eventId) {
+//        try{
+//            log.info("creating guest: " + requestDto);
+//            var userId = userService.getUserById(requestDto.userId());
+//            var eventIds = eventService.checkIfEventIdExists(eventId);
+//            if (userId && eventIds) {
+//                RequestContext.setUserId(requestDto.userId());
+//                var client = Client
+//                        .builder()
+//                        .eventId(eventId)
+//                        .userId(requestDto.userId())
+//                        .firstName(requestDto.firstName())
+//                        .lastName(requestDto.lastName())
+//                        .country(requestDto.country())
+//                        .phoneNumber(requestDto.phoneNumber())
+//                        .email(requestDto.email())
+//                        .budget(requestDto.budget())
+//                        .notes(requestDto.notes())
+//                        .active(true)
+//                        .build();
+//                log.info("Saving client: {}", client);
+//                var savedClient = repo.save(client);
+//
+//                log.info("Client saved successfully: {}", savedClient);
+//                return mapper.apply(savedClient);
+//            }
+//            else throw new ApiException(USER_FETCHING_ERROR);
+//        }
+//        catch (DataIntegrityViolationException ex) {
+//            log.error("Error adding client due to data integrity violation: {}", ex.getMessage(), ex);
+//            throw new ApiException("Failed to add guest due to data integrity violation");
+//        }
+//        catch (Exception ex) {
+//            log.error("Error adding client: {}", ex.getMessage(), ex);
+//            throw new ApiException(ex.getMessage());
+//        }
+//        finally {
+//            RequestContext.start();
+//        }
+//    }
 
     @Override
     public ClientResponseDTO updateClient(String id, ClientRequestDTO request) {

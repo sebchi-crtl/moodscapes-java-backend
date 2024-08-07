@@ -14,8 +14,8 @@ import java.util.List;
 public class Event extends Auditable {
     private String userId;
     private String title;
+//    @JoinColumn(name = "event_category", referencedColumnName = "id")
     @ManyToOne
-    @JoinColumn(name = "event_category", referencedColumnName = "id")
     private EventCategory eventCategory;
     private String location;
     private LocalDateTime eventDate;

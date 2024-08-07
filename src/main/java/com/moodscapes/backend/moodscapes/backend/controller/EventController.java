@@ -1,5 +1,6 @@
 package com.moodscapes.backend.moodscapes.backend.controller;
 
+import com.moodscapes.backend.moodscapes.backend.dto.request.ClientRequestDTO;
 import com.moodscapes.backend.moodscapes.backend.dto.request.EventRequestDTO;
 import com.moodscapes.backend.moodscapes.backend.dto.response.EventResponseDTO;
 import com.moodscapes.backend.moodscapes.backend.dto.response.HttpResponse;
@@ -141,6 +142,28 @@ public class EventController {
 
         try {
             var event = eventService.addEvent(requestDTO);
+            return ResponseEntity
+                    .ok()
+                    .body(getResponse(request, Map.of(
+                            "create_"+EVENT, event
+                    ), CREATE_SUCCESS, OK));
+        }
+        catch (AccessDeniedException ade){
+            log.error("Error writing response: {}", ade.getMessage());
+            handleErrorRequest(request, response, ade);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+        catch (Exception ex){
+            log.error("Error getting message: {}", ex.getMessage());
+            throw new ApiException(ex.getMessage());
+        }
+    }
+    @PostMapping("/client")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<HttpResponse> addEventClient(@RequestBody EventRequestDTO requestDTO, @RequestBody ClientRequestDTO requestClientDTO, HttpServletRequest request, HttpServletResponse response) {
+
+        try {
+            var event = eventService.addEventClient(requestDTO, requestClientDTO);
             return ResponseEntity
                     .ok()
                     .body(getResponse(request, Map.of(

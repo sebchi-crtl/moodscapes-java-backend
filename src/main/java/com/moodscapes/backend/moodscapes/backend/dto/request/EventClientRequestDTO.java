@@ -4,10 +4,10 @@ import com.moodscapes.backend.moodscapes.backend.entity.EventCategory;
 
 import java.time.LocalDateTime;
 
-public record EventRequestDTO(
+public record EventClientRequestDTO(
         String userId,
         String title,
-        String eventCategoryId,
+        EventCategory eventCategory,
         String location,
         LocalDateTime eventDate,
         String currency,
