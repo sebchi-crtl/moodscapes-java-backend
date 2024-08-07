@@ -19,7 +19,7 @@ import java.util.UUID;
 
 import static java.time.LocalDateTime.now;
 
-@Component
+//@Component
 public class DataInitializer {
     @Autowired
     private EventRepo eventRepository;
@@ -29,7 +29,7 @@ public class DataInitializer {
     @Autowired
     private EventCategoryRepo eventCategoryRepository;
 
-    @Bean
+//    @Bean
     public CommandLineRunner run() {
         String userId= UUID.randomUUID().toString();
         return args -> {
