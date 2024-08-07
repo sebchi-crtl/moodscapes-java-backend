@@ -41,10 +41,10 @@ public abstract class Auditable {
     @PrePersist
     public void beforePersist(){
 //        var userId = getId();
-//        var userId = "c3641fa8-0c27-4262-80ac-0a23ad12dacf";
-        var userId = RequestContext.getUserId();
-        if (userId == null)
-            throw new ApiException("Cannot persist entity without user ID in Request Context for the thread");
+        var userId = "c3641fa8-0c27-4262-80ac-0a23ad12dacf";
+//        var userId = RequestContext.getUserId();
+//        if (userId == null)
+//            throw new ApiException("Cannot persist entity without user ID in Request Context for the thread");
         setCreatedAt(now());
         setCreatedBy(userId);
         setUpdatedBy(userId);
@@ -53,10 +53,11 @@ public abstract class Auditable {
 
     @PreUpdate
     public void beforeUpdate(){
+        var userId = "c3641fa8-0c27-4262-80ac-0a23ad12dacf";
 //        var userId = getId();
-        var userId = RequestContext.getUserId();
-        if (userId == null)
-            throw new ApiException("Cannot persist entity without user ID in Request Context for the thread");
+//        var userId = RequestContext.getUserId();
+//        if (userId == null)
+//            throw new ApiException("Cannot persist entity without user ID in Request Context for the thread");
         setUpdatedAt(now());
         setUpdatedBy(userId);
     }

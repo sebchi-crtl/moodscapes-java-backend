@@ -22,7 +22,7 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_DEFAULT;
 @Builder
 @JsonInclude(NON_DEFAULT)
 public class User extends Auditable{
-    @Column(name = "userId", updatable = false, unique = true, nullable = false)
+    @Column(name = "userId", updatable = false)
     private String userId;
     @Email(message = "invalid email. Please provide a valid email")
     @Column(nullable = false, unique = true)

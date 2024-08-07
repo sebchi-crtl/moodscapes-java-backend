@@ -18,7 +18,7 @@ spring:
   application:
     name: moodscapes-backend
   profiles:
-    active: ${ACTIVE_PROFILE:prod}
+    active: ${ACTIVE_PROFILE:dev}
   jackson:
     default-property-inclusion: non_null
     serialization:

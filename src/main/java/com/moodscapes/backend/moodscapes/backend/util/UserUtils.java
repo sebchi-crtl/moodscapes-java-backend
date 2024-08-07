@@ -36,7 +36,7 @@ public class UserUtils {
 
     public static UserPrincipal fromUser(User user) {
         return UserPrincipal.builder()
-                .id(user.getUserId())
+                .id(user.getId())
                 .email(user.getEmail())
                 .fullName(user.getFullName())
                 .bio(user.getBio())
