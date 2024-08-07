@@ -54,7 +54,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests((authorize) ->
                         authorize
-                                .requestMatchers("/auth/**", "/oauth2/**", "/users/**", "/guest/**", "/bookings/**", "/event/**", "/client/**", "/v2/api-docs/**", "/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs", "/v3/api-docs/**")
+                                .requestMatchers("/auth/**", "/oauth2/**", "/users/**", "/guest/**", "/quote/**", "/bookings/**", "/event/**", "/event-category/**", "/client/**", "/v2/api-docs/**", "/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs", "/v3/api-docs/**")
                                 .permitAll()
 //                                .requestMatchers("/super_admin/**").hasRole(ROLE_SUPAADMIN)
 //                                .requestMatchers("/admin/**").hasRole(ROLE_ADMIN)
