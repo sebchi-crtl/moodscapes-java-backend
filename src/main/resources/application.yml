@@ -96,10 +96,14 @@ spring:
             userNameAttribute: sub
 
 cors:
-  allowed-origins: "*"
-  allowed-headers: "*"
-  allowed-methods: "*"
-  exposed-headers: "*"
+  allowed-origins:
+    - '*'
+  allowed-headers:
+    - '*'
+  allowed-methods:
+    - '*'
+  exposed-headers:
+    - '*'
 
 app:
   auth:
