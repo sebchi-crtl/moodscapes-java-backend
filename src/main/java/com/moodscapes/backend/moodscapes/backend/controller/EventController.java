@@ -27,6 +27,7 @@ import static org.springframework.http.HttpStatus.OK;
 @Slf4j
 @AllArgsConstructor
 @RequestMapping("/event")
+@CrossOrigin
 public class EventController {
     private final IEventService eventService;
 

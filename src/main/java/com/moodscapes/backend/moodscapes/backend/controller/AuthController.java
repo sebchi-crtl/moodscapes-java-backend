@@ -20,6 +20,7 @@ import static org.springframework.http.HttpStatus.OK;
 @Slf4j
 @RequestMapping("/auth")
 @RequiredArgsConstructor
+@CrossOrigin
 public class AuthController {
 
     private final IAuthService authService;

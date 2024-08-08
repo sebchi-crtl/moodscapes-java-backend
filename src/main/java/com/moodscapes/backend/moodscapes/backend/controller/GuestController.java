@@ -25,6 +25,7 @@ import static org.springframework.http.HttpStatus.OK;
 @Slf4j
 @RequestMapping("/guest")
 @AllArgsConstructor
+@CrossOrigin
 public class GuestController {
     private final IGuestService guestService;
 

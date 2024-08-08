@@ -28,6 +28,7 @@ import static org.springframework.http.HttpStatus.OK;
 @Slf4j
 @RequestMapping("/quote")
 @AllArgsConstructor
+@CrossOrigin
 public class QuoteController {
 
     private final IQuoteService quoteService;

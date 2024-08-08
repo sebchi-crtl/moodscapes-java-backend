@@ -26,6 +26,7 @@ import static org.springframework.http.HttpStatus.OK;
 @Slf4j
 @AllArgsConstructor
 @RequestMapping("/event-category")
+@CrossOrigin
 public class EventCategoryController {
     private final IEventCategoryService eventService;
 

@@ -26,6 +26,7 @@ import static org.springframework.http.HttpStatus.OK;
 @Slf4j
 @RequestMapping("/client")
 @AllArgsConstructor
+@CrossOrigin
 public class ClientController {
     private final IClientService clientService;
 

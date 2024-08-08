@@ -29,6 +29,7 @@ import static org.springframework.http.HttpStatus.OK;
 @Slf4j
 @RequestMapping("/bookings")
 @RequiredArgsConstructor
+@CrossOrigin
 public class BookingController {
     private final IBookingService bookingService;
 
