@@ -7,12 +7,18 @@ import java.time.LocalDateTime;
 public record EventClientRequestDTO(
         String userId,
         String title,
-        EventCategory eventCategory,
+        String eventCategoryId,
         String location,
         LocalDateTime eventDate,
         String currency,
-        String notes,
-        String sharedUserId
+        String eventNotes,
+        String firstName,
+        String lastName,
+        String country,
+        String phoneNumber,
+        String email,
+        float budget,
+        String clientNotes
 ) {
 }
 
